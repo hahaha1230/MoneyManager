@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_vertical"
+    android:stretchColumns="0,3"
+    tools:context="com.example.a25467.moneymanager.MainActivity">
+
+<TableRow>
+ <TextView />
+ <TextView
+     android:text="账号："
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:textSize="24px"/>
+ <EditText
+     android:id="@+id/account"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:textSize="24px"
+     android:minWidth="220px"/>
+ <TextView />
+</TableRow>
+ <TableRow android:layout_marginTop="20px">
+  <TextView />
+  <TextView
+      android:text="密码："
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+  <EditText
+      android:id="@+id/pwd"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minWidth="220px"
+      android:textSize="24px"
+      android:inputType="textPassword"/>
+  <TextView />
+
+
+ </TableRow>
+ <TableRow android:layout_marginTop="20px">
+  <TextView />
+  <Button
+      android:id="@+id/login"
+      android:text="登录"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+  <Button
+      android:id="@+id/quit"
+      android:text="退出"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"/>
+  <TextView />
+
+ </TableRow>
+
+</TableLayout>

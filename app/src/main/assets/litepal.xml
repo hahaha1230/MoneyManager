@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<litepal>
+    <dbname value="Notes"></dbname>
+    <version value="1"></version>
+    <list>
+        <mapping class="com.example.a25467.moneymanager.notes"></mapping>
+        <mapping class="com.example.a25467.moneymanager.pay_class"></mapping>
+        <mapping class="com.example.a25467.moneymanager.Income_class"></mapping>
+    </list>
+</litepal>
