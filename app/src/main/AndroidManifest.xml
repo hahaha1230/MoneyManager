@@ -17,11 +17,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".newNote" />
         <activity android:name=".Main2Activity" />
-        <activity android:name=".pay" />
-        <activity android:name=".Income" />
-        <activity android:name=".DataManager"></activity>
     </application>
 
 </manifest>

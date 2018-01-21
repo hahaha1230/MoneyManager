@@ -4,7 +4,7 @@ package com.example.a25467.moneymanager;
  * Created by 25467 on 2018/1/19.
  */
 
-public class notes {
+public class notes_class {
     private String date;
     private  String content;
 

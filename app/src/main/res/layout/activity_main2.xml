@@ -6,43 +6,69 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.a25467.moneymanager.Main2Activity">
-    <Button
-        android:layout_marginTop="50dp"
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/addnotes"
-        android:text="Add Notes"
-        android:textAllCaps="false"/>
-    <Button
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorAccent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/title"
+            android:layout_centerInParent="true"
+            android:text="便签"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20sp"/>
+    </RelativeLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/mainViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:baselineAligned="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        >
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/item_notes"
+            android:textSize="15dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="便签"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:id="@+id/item_pay"
+            android:gravity="center"
+            android:text="新建支出"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/item_income"
+            android:gravity="center"
+            android:textSize="15dp"
+            android:text="新建收入"/>
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/item_datamanager"
+            android:text="数据管理"
+            android:textSize="15dp"
+            android:gravity="center"/>
 
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/newpay"
-        android:text="New Pay"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/newincome"
-        android:text="New Income"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/datamanager"
-        android:text="Data Manager"
-        android:textAllCaps="false"/>
-    <Button
-        android:layout_width="160dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:id="@+id/settings"
-        android:text="setings"
-        android:textAllCaps="false"/>
+    </LinearLayout>
 
 
 </LinearLayout>

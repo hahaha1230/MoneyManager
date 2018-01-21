@@ -1,70 +1,66 @@
 package com.example.a25467.moneymanager;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Income extends AppCompatActivity implements View.OnClickListener{
+/**
+ * Created by 25467 on 2018/1/21.
+ */
+
+public class New_Income extends Fragment implements View.OnClickListener{
     Button choose_Account,btn,sure_income,quit_income;
     TextView sure_Account;
     TextView dateDisplay;
     EditText num,category,where,notes1;
-    final int DATE_DIALOG=1;
-    int mYear,mMonth,mDay;
+    public New_Income(){
 
+    }
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_income);
-        choose_Account=(Button)findViewById(R.id.choose_Account);
-        btn=(Button)findViewById(R.id.choosedate1);
-        sure_income=(Button)findViewById(R.id.sure_income);
-        quit_income=(Button)findViewById(R.id.quit_income);
-        sure_Account=(TextView)findViewById(R.id.sure_Account);
-        dateDisplay=(TextView)findViewById(R.id.dateDisplay1);
-        num=(EditText)findViewById(R.id.num);
-        category=(EditText)findViewById(R.id.category);
-        where=(EditText)findViewById(R.id.where);
-        notes1=(EditText)findViewById(R.id.notes1);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        return inflater.inflate(R.layout.activity_income,container,false);
+    }
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        choose_Account=(Button)getActivity().findViewById(R.id.choose_Account);
+        btn=(Button)getActivity().findViewById(R.id.choosedate1);
+        sure_income=(Button)getActivity().findViewById(R.id.sure_income);
+        quit_income=(Button)getActivity().findViewById(R.id.quit_income);
+        sure_Account=(TextView)getActivity().findViewById(R.id.sure_Account);
+        dateDisplay=(TextView)getActivity().findViewById(R.id.dateDisplay1);
+        num=(EditText)getActivity().findViewById(R.id.num);
+        category=(EditText)getActivity().findViewById(R.id.category);
+        where=(EditText)getActivity().findViewById(R.id.where);
+        notes1=(EditText)getActivity().findViewById(R.id.notes1);
         choose_Account.setOnClickListener(this);
         btn.setOnClickListener(this);
         sure_income.setOnClickListener(this);
         quit_income.setOnClickListener(this);
-
-
-        final java.util.Calendar ca= java.util.Calendar.getInstance();
-        mYear=ca.get(java.util.Calendar.YEAR);
-        mMonth=ca.get(java.util.Calendar.MONTH);
-        mDay=ca.get(java.util.Calendar.DAY_OF_MONTH);
     }
     @Override
-    public void onClick(View v){
-        switch (v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.choose_Account:
                 choose_Account.showContextMenu();
                 break;
-            case R.id.choosedate1:
-                showDialog(DATE_DIALOG);
-                break;
             case R.id.sure_income:
-                int i=Integer.valueOf(num.getText().toString()).intValue();
-                Income_class incomeClass=new Income_class();
+                int i = Integer.valueOf(num.getText().toString()).intValue();
+                Income_class incomeClass = new Income_class();
                 incomeClass.setAccount(sure_Account.getText().toString());
                 incomeClass.setCategory(category.getText().toString());
                 incomeClass.setDate(dateDisplay.getText().toString());
                 incomeClass.setNotes(notes1.getText().toString());
                 incomeClass.setMoney(i);
                 incomeClass.save();
-                Toast.makeText(Income.this,"您的信息已经保存",Toast.LENGTH_SHORT).show();
             case R.id.quit_income:
                 sure_Account.setText(null);
                 category.setText(null);
@@ -72,11 +68,10 @@ public class Income extends AppCompatActivity implements View.OnClickListener{
                 notes1.setText(null);
                 num.setText(null);
                 break;
-                default:
-                    break;
+            default:
+                break;
 
         }
-
         choose_Account.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -89,6 +84,7 @@ public class Income extends AppCompatActivity implements View.OnClickListener{
 
             }
         });
+
     }
     @Override
     public boolean onContextItemSelected(MenuItem item){
@@ -111,30 +107,9 @@ public class Income extends AppCompatActivity implements View.OnClickListener{
             case 5:
                 sure_Account.setText("QQ红包");
                 break;
-                default:
-                    break;
+            default:
+                break;
         }
         return true;
     }
-    @Override
-    protected Dialog onCreateDialog(int id){
-        switch (id){
-            case DATE_DIALOG:
-                return new DatePickerDialog(this,mdateListener,mYear,mMonth,mDay);
-        }
-        return null;
-    }
-    public void display(){
-        dateDisplay.setText(new StringBuffer().append(mMonth+1).append("-").append(mDay).append("-")
-                .append(mYear).append(" "));
-    }
-    private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            mYear=year;
-            mMonth=month;
-            mDay=dayOfMonth;
-            display();
-        }
-    };
 }
