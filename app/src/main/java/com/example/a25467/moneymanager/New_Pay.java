@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.litepal.LitePal;
 
@@ -71,7 +70,7 @@ public class New_Pay extends Fragment implements View.OnClickListener {
                 break;
             case R.id.sure_pay:
                 int i = Integer.valueOf(num.getText().toString()).intValue();
-                pay_class payClass = new pay_class();
+                Pay_Datatable payClass = new Pay_Datatable();
                 payClass.setAccount(choose_Account.getText().toString());
                 payClass.setDate(dateDisplay.getText().toString());
                 payClass.setMoney(i);

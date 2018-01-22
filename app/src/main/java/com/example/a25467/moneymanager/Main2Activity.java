@@ -1,6 +1,5 @@
 package com.example.a25467.moneymanager;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,40 +7,55 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
+
+import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
-    private TextView title,item_notes,item_pay,item_income,item_datamanager;
+    private TextView title,item_notes,item_bookkeeping;
     private ViewPager vp;
-    private  New_Income newIncome;
-    private New_Notes newNotes;
-    private  New_Pay newPay;
-    private DataManager dataManager;
+    private New_Notes_Fragment newNotes;
+    private BookKeeping_Fragment bookKeeping;
     private List<Fragment> mFragementList=new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
-   // Button addNotes;
+    private  List<Notesss>notesList=new ArrayList<>();
 
 
-    String []titles=new String[]{"便签","新建支出","新建收入","数据管理"};
+    String []titles=new String[]{"便签","记账"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main2);
+        Connector.getDatabase();
+       // LitePal.getDatabase();
+
+        notes_datatable nn=new notes_datatable();
+        nn.setContent("womeiyouhuaqianc");
+        nn.setDate("lllll1");
+        nn.save();
+
+
+       initNotes();
+       RecyclerView recyclerView=(RecyclerView)findViewById(R.id.recy_list);
+       LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+       recyclerView.setLayoutManager(layoutManager);
+       Notes_Adapter adapter=new Notes_Adapter(notesList);
+       recyclerView.setAdapter(adapter);
+
+
         initViews();
-
-
         mFragmentAdapter=new FragmentAdapter(this.getSupportFragmentManager(),mFragementList);
-        vp.setOffscreenPageLimit(4);
+        vp.setOffscreenPageLimit(2);
         vp.setAdapter(mFragmentAdapter);
         vp.setCurrentItem(0);
         item_notes.setTextColor(Color.parseColor("#66CDAA"));
-
 
         vp.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -60,39 +74,43 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
             }
         });
+    }
 
 
+
+    private void initNotes(){
+        //int max= DataSupport.count(notes_datatable.class);
+        //Log.d("hhhhh",String.valueOf(max));
+
+        String m,n;
+        for (int i=1;i<=5;i++){
+            //notes_datatable aa= DataSupport.find(notes_datatable.class,i);
+            //m=aa.getContent();
+            //n=aa.getDate();
+
+            Notesss notes=new Notesss("mm","nn");
+            notesList.add(notes);
+
+        }
     }
 
     private void initViews(){
         title=(TextView)findViewById(R.id.title);
-        item_pay=(TextView)findViewById(R.id.item_pay);
-        item_datamanager=(TextView)findViewById(R.id.item_datamanager);
-        item_income=(TextView)findViewById(R.id.item_income);
         item_notes=(TextView)findViewById(R.id.item_notes);
-
+        item_bookkeeping=(TextView)findViewById(R.id.item_Book_Keepping) ;
 
 
         item_notes.setOnClickListener(this);
-        item_income.setOnClickListener(this);
-        item_datamanager.setOnClickListener(this);
-        item_pay.setOnClickListener(this);
-
-
+       item_bookkeeping.setOnClickListener(this);
 
         vp=(ViewPager)findViewById(R.id.mainViewPager);
-        newIncome=new New_Income();
-        dataManager=new DataManager();
-        newNotes=new New_Notes();
-        newPay=new New_Pay();
+        bookKeeping=new BookKeeping_Fragment();
+        newNotes=new New_Notes_Fragment();
 
 
 
         mFragementList.add(newNotes);
-        mFragementList.add(newPay);
-        mFragementList.add(newIncome);
-        mFragementList.add(dataManager);
-
+        mFragementList.add(bookKeeping);
     }
 
     @Override
@@ -101,14 +119,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             case R.id.item_notes:
                 vp.setCurrentItem(0,true);
                 break;
-            case R.id.item_pay:
+            case R.id.item_Book_Keepping:
                 vp.setCurrentItem(1,true);
-                break;
-            case R.id.item_income:
-                vp.setCurrentItem(2,true);
-                break;
-            case R.id.item_datamanager:
-                vp.setCurrentItem(3,true);
                 break;
             default:
                     break;
@@ -135,27 +147,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private  void changeTextColor(int position){
         if(position==0){
             item_notes.setTextColor(Color.parseColor("#66CDAA"));
-            item_pay.setTextColor(Color.parseColor("#000000"));
-            item_datamanager.setTextColor(Color.parseColor("#000000"));
-            item_income.setTextColor(Color.parseColor("#000000"));
+            item_bookkeeping.setTextColor(Color.parseColor("#000000"));
         }
         else  if(position==1){
             item_notes.setTextColor(Color.parseColor("#000000"));
-            item_pay.setTextColor(Color.parseColor("#66CDAA"));
-            item_income.setTextColor(Color.parseColor("#000000"));
-            item_datamanager.setTextColor(Color.parseColor("#000000"));
-        }
-        else if (position==2){
-            item_datamanager.setTextColor(Color.parseColor("#000000"));
-            item_notes.setTextColor(Color.parseColor("#000000"));
-           item_income.setTextColor(Color.parseColor("#66CDAA"));
-            item_pay.setTextColor(Color.parseColor("#000000"));
-        }
-        else if (position==3){
-           item_income.setTextColor(Color.parseColor("#000000"));
-            item_notes.setTextColor(Color.parseColor("#000000"));
-           item_pay.setTextColor(Color.parseColor("#000000"));
-           item_datamanager.setTextColor(Color.parseColor("#66CDAA"));
+           item_bookkeeping.setTextColor(Color.parseColor("#66CDAA"));
+
         }
     }
 }

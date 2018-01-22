@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <litepal>
-    <dbname value="Notes"></dbname>
-    <version value="1"></version>
+    <dbname value="DataNotes"></dbname>
+    <version value="2"></version>
     <list>
-        <mapping class="com.example.a25467.moneymanager.notes_class"></mapping>
-        <mapping class="com.example.a25467.moneymanager.pay_class"></mapping>
-        <mapping class="com.example.a25467.moneymanager.Income_class"></mapping>
+        <mapping class="com.example.a25467.moneymanager.notes_datatable"></mapping>
+
     </list>
 </litepal>

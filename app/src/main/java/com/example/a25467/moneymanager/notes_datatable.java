@@ -1,10 +1,12 @@
 package com.example.a25467.moneymanager;
 
+import org.litepal.crud.DataSupport;
+
 /**
  * Created by 25467 on 2018/1/19.
  */
 
-public class notes_class {
+public class notes_datatable extends DataSupport{
     private String date;
     private  String content;
 

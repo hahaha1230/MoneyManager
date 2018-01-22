@@ -19,6 +19,7 @@
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"/>
     </RelativeLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/mainViewPager"
         android:layout_width="match_parent"
@@ -43,30 +44,16 @@
             android:textSize="15dp"
             android:gravity="center_vertical|center_horizontal"
             android:text="便签"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/item_pay"
-            android:gravity="center"
-            android:text="新建支出"
-            android:textSize="15dp"/>
+
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/item_income"
-            android:gravity="center"
-            android:textSize="15dp"
-            android:text="新建收入"/>
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/item_datamanager"
-            android:text="数据管理"
+            android:id="@+id/item_Book_Keepping"
+            android:text="记账"
             android:textSize="15dp"
             android:gravity="center"/>
+
 
     </LinearLayout>
 

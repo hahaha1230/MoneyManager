@@ -18,6 +18,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".Main2Activity" />
+        <activity android:name=".NewNote_Activity" />
+        <activity android:name=".Pay_Activity" />
+        <activity android:name=".Income_Activity"></activity>
     </application>
 
 </manifest>

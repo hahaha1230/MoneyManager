@@ -6,7 +6,7 @@ import org.litepal.crud.DataSupport;
  * Created by 25467 on 2018/1/19.
  */
 
-public class pay_class extends DataSupport {
+public class Pay_Datatable extends DataSupport {
     private int money;
     private String date;
     private String purpose;
