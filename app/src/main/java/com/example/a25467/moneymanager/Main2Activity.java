@@ -9,9 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 import java.util.ArrayList;
@@ -33,13 +36,9 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main2);
-        Connector.getDatabase();
-       // LitePal.getDatabase();
+        //Connector.getDatabase();
+      LitePal.getDatabase();
 
-        notes_datatable nn=new notes_datatable();
-        nn.setContent("womeiyouhuaqianc");
-        nn.setDate("lllll1");
-        nn.save();
 
 
        initNotes();
@@ -79,16 +78,15 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
 
     private void initNotes(){
-        //int max= DataSupport.count(notes_datatable.class);
-        //Log.d("hhhhh",String.valueOf(max));
+        int max= DataSupport.count(notes_datatable.class);
 
-        String m,n;
-        for (int i=1;i<=5;i++){
-            //notes_datatable aa= DataSupport.find(notes_datatable.class,i);
-            //m=aa.getContent();
-            //n=aa.getDate();
+       String m,n;
+        for (int i=1;i<=max;i++){
+            notes_datatable aa= DataSupport.find(notes_datatable.class,i);
+            m=aa.getContent();
+            n=aa.getDate();
 
-            Notesss notes=new Notesss("mm","nn");
+            Notesss notes=new Notesss(m,n);
             notesList.add(notes);
 
         }
