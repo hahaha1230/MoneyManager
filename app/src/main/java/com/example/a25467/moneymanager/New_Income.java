@@ -39,7 +39,6 @@ public class New_Income extends Fragment implements View.OnClickListener{
         dateDisplay=(TextView)getActivity().findViewById(R.id.dateDisplay1);
         num=(EditText)getActivity().findViewById(R.id.num);
         category=(EditText)getActivity().findViewById(R.id.category);
-        where=(EditText)getActivity().findViewById(R.id.where);
         notes1=(EditText)getActivity().findViewById(R.id.notes1);
         choose_Account.setOnClickListener(this);
         btn.setOnClickListener(this);

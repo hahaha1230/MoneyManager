@@ -27,7 +27,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private BookKeeping_Fragment bookKeeping;
     private List<Fragment> mFragementList=new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
-    private  List<Notesss>notesList=new ArrayList<>();
 
 
     String []titles=new String[]{"便签","记账"};
@@ -36,17 +35,22 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main2);
+        /*BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
+        bookKepping_data_table.setDate(2017_02_05);
+        bookKepping_data_table.setMoney(99);
+        bookKepping_data_table.setCategory(1);
+        bookKepping_data_table.save();*/
         //Connector.getDatabase();
-      LitePal.getDatabase();
+     // LitePal.getDatabase();
 
 
 
-       initNotes();
+      /* initNotes();
        RecyclerView recyclerView=(RecyclerView)findViewById(R.id.recy_list);
        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
        recyclerView.setLayoutManager(layoutManager);
        Notes_Adapter adapter=new Notes_Adapter(notesList);
-       recyclerView.setAdapter(adapter);
+       recyclerView.setAdapter(adapter);*/
 
 
         initViews();
@@ -77,12 +81,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
 
 
-    private void initNotes(){
-        int max= DataSupport.count(notes_datatable.class);
+   /* private void initNotes(){
+        int max= DataSupport.count(Notes_Data_table.class);
 
        String m,n;
         for (int i=1;i<=max;i++){
-            notes_datatable aa= DataSupport.find(notes_datatable.class,i);
+            Notes_Data_table aa= DataSupport.find(Notes_Data_table.class,i);
             m=aa.getContent();
             n=aa.getDate();
 
@@ -90,7 +94,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             notesList.add(notes);
 
         }
-    }
+    }*/
 
     private void initViews(){
         title=(TextView)findViewById(R.id.title);

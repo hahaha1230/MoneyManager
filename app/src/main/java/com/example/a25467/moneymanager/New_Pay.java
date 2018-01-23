@@ -1,88 +1,93 @@
 package com.example.a25467.moneymanager;
 
+import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import org.litepal.LitePal;
+import java.util.Calendar;
 
-/**
- * Created by 25467 on 2018/1/21.
- */
-
-public class New_Pay extends Fragment implements View.OnClickListener {
-    Button choose_Account, choose_date, sure_pay, quit_pay;
+public class New_Pay extends Activity implements View.OnClickListener{
+    Button choose_Account, choose_date, sure_pay, quit_pay,notes_sure,notes_quit;
     TextView sure_Account;
     TextView dateDisplay;
-    EditText num, purpose, where, notes1;
+    EditText num, purpose, notes1;
+    int mYear,mMonth,mDay;
+    final int DATE_DIALOG=1;
 
-    public New_Pay() {
-
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_pay, container, false);
-    }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        choose_date = (Button) getActivity().findViewById(R.id.choosedate);
-        dateDisplay = (TextView) getActivity().findViewById(R.id.dateDisplay);
-        LitePal.getDatabase();
-        choose_Account = (Button) getActivity().findViewById(R.id.choose_Account);
-        sure_Account = (TextView) getActivity().findViewById(R.id.sure_Account);
-        choose_date = (Button) getActivity().findViewById(R.id.choosedate1);
-        num = (EditText) getActivity().findViewById(R.id.num);
-        purpose = (EditText) getActivity().findViewById(R.id.purpose);
-        where = (EditText) getActivity().findViewById(R.id.where);
-        notes1 = (EditText) getActivity().findViewById(R.id.notes1);
-        sure_pay = (Button) getActivity().findViewById(R.id.sure_pay);
-        quit_pay = (Button) getActivity().findViewById(R.id.quit_pay);
-        dateDisplay = (TextView) getActivity().findViewById(R.id.dateDisplay1);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_pay);
+        choose_date = (Button)findViewById(R.id.choose_date);
+        dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+        choose_Account = (Button)findViewById(R.id.choose_Account);
+        sure_Account = (TextView)findViewById(R.id.sure_Account);
+        choose_date = (Button) findViewById(R.id.choosedate1);
+        num = (EditText) findViewById(R.id.num);
+        purpose = (EditText)findViewById(R.id.purpose);
+        notes1 = (EditText) findViewById(R.id.notes1);
+        sure_pay = (Button) findViewById(R.id.sure_pay);
+        quit_pay = (Button) findViewById(R.id.quit_pay);
+        dateDisplay = (TextView) findViewById(R.id.dateDisplay1);
         choose_Account.setOnClickListener(this);
         choose_date.setOnClickListener(this);
         sure_pay.setOnClickListener(this);
         quit_pay.setOnClickListener(this);
 
-        choose_date.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        final  java.util.Calendar ca=java.util.Calendar.getInstance();
+        mYear=ca.get(Calendar.YEAR);
+        mMonth=ca.get(Calendar.MONTH);
+        mDay=ca.get(Calendar.DAY_OF_MONTH);
 
-            }
-        });
+
 
     }
 
     @Override
     public void onClick(View v) {
+        String information =null;
         switch (v.getId()) {
+            case R.id.choosedate1:
+                showDialog(DATE_DIALOG);
+                break;
+
             case R.id.choose_Account:
                 choose_Account.showContextMenu();
                 break;
             case R.id.sure_pay:
-                int i = Integer.valueOf(num.getText().toString()).intValue();
-                Pay_Datatable payClass = new Pay_Datatable();
-                payClass.setAccount(choose_Account.getText().toString());
-                payClass.setDate(dateDisplay.getText().toString());
-                payClass.setMoney(i);
-                payClass.setPurpose(purpose.getText().toString());
-                payClass.setWhere(where.getText().toString());
-                payClass.setNotes(notes1.getText().toString());
-                payClass.save();
+                try {
+                    BookKepping_Data_Table bookKepping_data_table= new BookKepping_Data_Table();
+                    bookKepping_data_table = new BookKepping_Data_Table();
+                    bookKepping_data_table.setCategory(1);
+                    bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
+                    bookKepping_data_table.setAccount(choose_Account.getText().toString());
+                    bookKepping_data_table.setDate(Long.parseLong(dateDisplay.getText().toString()));
+                    bookKepping_data_table.setSource_or_purpose(purpose.getText().toString());
+                    bookKepping_data_table.setNotes(notes1.getText().toString());
+                    bookKepping_data_table.save();
+                    information="您的新的支出信息已保存";
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    information="您输入的信息有误，请重新输入！";
+                } finally {
+                    Toast.makeText(New_Pay.this,information,Toast.LENGTH_SHORT).show();
+                }
+                break;
+
             case R.id.quit_income:
-                choose_Account.setText(null);
+                sure_Account.setText(null);
                 purpose.setText(null);
                 dateDisplay.setText(null);
-                where.setText(null);
                 notes1.setText(null);
                 num.setText(null);
                 break;
@@ -132,4 +137,27 @@ public class New_Pay extends Fragment implements View.OnClickListener {
         }
         return  true;
     }
+    @Override
+    protected Dialog onCreateDialog(int id){
+        switch (id){
+            case DATE_DIALOG:
+                return new DatePickerDialog(this,mdateListener,mYear,mMonth,mDay);
+        }
+        return null;
+    }
+    public void display(){
+        /*dateDisplay.setText(new StringBuffer().append(mMonth+1).append("-").append(mDay).append("-")
+                .append(mYear).append(" "));*/
+        dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).append("月").append(mDay)
+        .append("日"));
+    }
+    private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+            mYear=year;
+            mMonth=month;
+            mDay=dayOfMonth;
+            display();
+        }
+    };
 }

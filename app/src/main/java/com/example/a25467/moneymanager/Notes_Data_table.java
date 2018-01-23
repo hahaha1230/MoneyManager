@@ -3,20 +3,12 @@ package com.example.a25467.moneymanager;
 import org.litepal.crud.DataSupport;
 
 /**
- * Created by 25467 on 2018/1/19.
+ * Created by 25467 on 2018/1/23.
  */
 
-public class notes_datatable extends DataSupport{
+public class Notes_Data_table extends DataSupport {
+    private String content;
     private String date;
-    private  String content;
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 
     public String getContent() {
         return content;
@@ -24,5 +16,13 @@ public class notes_datatable extends DataSupport{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <litepal>
     <dbname value="Data"></dbname>
-    <version value="1"></version>
+    <version value="7"></version>
     <list>
-        <mapping class="com.example.a25467.moneymanager.notes_datatable"></mapping>
+       <mapping class="com.example.a25467.moneymanager.Notes_Data_table"></mapping>
+        <mapping class="com.example.a25467.moneymanager.BookKepping_Data_Table"></mapping>
     </list>
 </litepal>
