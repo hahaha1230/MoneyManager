@@ -81,12 +81,12 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
                     startActivity(intent);
                 }
                 else if (change==3){
-                    Intent intent=new Intent(getActivity(),Sum.class);
-                    startActivity(intent);
+
                 }
 
                 break;
         }
+
         changetextcolor();
 
 
@@ -108,7 +108,7 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table aa:aas){
                    AccountBook accountBook=new AccountBook("您于"+String.valueOf(aa.getDate())+
-                           "花费了"+String.valueOf(aa.getMoney()));
+                           "花费了"+String.valueOf(aa.getMoney()),aa.getCreate_time());
                    accountBookList.add(accountBook);
 
 
@@ -119,7 +119,7 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table bb:bbs){
                     AccountBook accountBook=new AccountBook("您于"+String.valueOf(bb.getDate())+
-                            "收入了"+String.valueOf(bb.getMoney()));
+                            "收入了"+String.valueOf(bb.getMoney()),bb.getCreate_time());
                     accountBookList.add(accountBook);
                 }
 
@@ -138,7 +138,8 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
                 }
                 sum=income-pay;
                 AccountBook accountBook=new AccountBook("您一共花费了"+String.valueOf(pay)+"元，"
-                        +"收入了"+String.valueOf(income)+"元。总收入为"+String.valueOf(sum)+"元");
+                        +"收入了"+String.valueOf(income)+"元。总收入为"+String.valueOf(sum)+"元",
+                        System.currentTimeMillis());
                 accountBookList.add(accountBook);
                 break;
             default:

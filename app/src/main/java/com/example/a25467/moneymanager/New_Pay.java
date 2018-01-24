@@ -66,14 +66,25 @@ public class New_Pay extends Activity implements View.OnClickListener{
                 break;
             case R.id.sure_pay:
                 try {
+                    String str=dateDisplay.getText().toString();
+                    str.trim();
+                    String str2="";
+                    if (str !=null&&!"".equals(str)){
+                        for (int i=0;i<str.length();i++){
+                            if (str.charAt(i)>=48 &&str.charAt(i)<=57){
+                                str2+=str.charAt(i);
+                            }
+                        }
+                    }
                     BookKepping_Data_Table bookKepping_data_table= new BookKepping_Data_Table();
                     bookKepping_data_table = new BookKepping_Data_Table();
                     bookKepping_data_table.setCategory(1);
                     bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
                     bookKepping_data_table.setAccount(choose_Account.getText().toString());
-                    bookKepping_data_table.setDate(Long.parseLong(dateDisplay.getText().toString()));
+                    bookKepping_data_table.setDate(Long.parseLong(str2));
                     bookKepping_data_table.setSource_or_purpose(purpose.getText().toString());
                     bookKepping_data_table.setNotes(notes1.getText().toString());
+                    bookKepping_data_table.setCreate_time(System.currentTimeMillis());
                     bookKepping_data_table.save();
                     information="您的新的支出信息已保存";
                 } catch (Exception e) {

@@ -22,7 +22,8 @@
         <activity android:name=".Pay_Activity" />
         <activity android:name=".Income_Activity" />
         <activity android:name=".Sum" />
-        <activity android:name=".New_Pay"></activity>
+        <activity android:name=".New_Pay" />
+        <activity android:name=".New_Income"></activity>
     </application>
 
 </manifest>

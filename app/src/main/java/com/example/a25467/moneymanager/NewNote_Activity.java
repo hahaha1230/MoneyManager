@@ -48,12 +48,35 @@ public class NewNote_Activity extends Activity implements View.OnClickListener{
                 showDialog(DATE_DIALOG);
                 break;
             case R.id.notes_sure:
-                Notes_Data_table notes_data_table=new Notes_Data_table();
-                notes_data_table.setContent(contents.getText().toString());
-                notes_data_table.setDate(dateDisplay.getText().toString());
-                notes_data_table.save();
-                Toast.makeText(NewNote_Activity.this,"保存成功！",Toast.LENGTH_SHORT).show();
+
+                String str= null;
+                String m="";
+                try {
+                    str = dateDisplay.getText().toString();
+                    str.trim();
+                    String str2="";
+                    if (str !=null&&!"".equals(str)){
+                        for (int i=0;i<str.length();i++){
+                            if (str.charAt(i)>=48 &&str.charAt(i)<=57){
+                                str2+=str.charAt(i);
+                            }
+                        }
+                    }
+                    Notes_Data_table notes_data_table=new Notes_Data_table();
+                    notes_data_table.setContent(contents.getText().toString());
+                    notes_data_table.setDate(Long.parseLong(str2));
+                    notes_data_table.setCreate_time(System.currentTimeMillis());
+                    notes_data_table.save();
+                    m="保存成功！";
+                    break;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    m="您输入的信息有误，请重新输入！";
+                } finally {
+                    Toast.makeText(NewNote_Activity.this,m,Toast.LENGTH_SHORT).show();
+                }
                 break;
+
             case R.id.notes_quit:
                 contents.setText("");
                 dateDisplay.setText("");
@@ -72,8 +95,8 @@ public class NewNote_Activity extends Activity implements View.OnClickListener{
         return null;
     }
     public void display(){
-        dateDisplay.setText(new StringBuffer().append(mMonth+1).append("-").append(mDay).append("-")
-                .append(mYear).append(" "));
+        dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).append("月").append(mDay)
+                .append("日"));
     }
     private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
         @Override

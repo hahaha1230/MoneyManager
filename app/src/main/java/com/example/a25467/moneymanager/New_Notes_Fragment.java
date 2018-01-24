@@ -72,10 +72,9 @@ public class New_Notes_Fragment extends Fragment {
         List <Notes_Data_table>notes_data_tables=DataSupport.findAll(Notes_Data_table.class);
         for (Notes_Data_table nn:notes_data_tables) {
             m=nn.getContent();
-            n=nn.getDate();
-            Log.d("hhh",m);
-            Log.d("hhh",n);
-            Notesss notes=new Notesss(m,n);
+            n=String.valueOf(nn.getDate());
+            long i=nn.getCreate_time();
+            Notesss notes=new Notesss(m,n,i);
             notesList.add(notes);
 
         }

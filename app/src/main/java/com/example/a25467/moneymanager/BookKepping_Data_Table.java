@@ -8,11 +8,20 @@ import org.litepal.crud.DataSupport;
 
 public class BookKepping_Data_Table extends DataSupport {
    private Double money;
-   private Long date;
+   private long date;
    private String account;
    private String notes;
    private int category;
    private String source_or_purpose;
+   private long create_time;
+
+    public long getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(long create_time) {
+        this.create_time = create_time;
+    }
 
     public Double getMoney() {
         return money;
@@ -22,11 +31,11 @@ public class BookKepping_Data_Table extends DataSupport {
         this.money = money;
     }
 
-    public Long getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Long date) {
+    public void setDate(long date) {
         this.date = date;
     }
 

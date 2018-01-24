@@ -8,7 +8,16 @@ import org.litepal.crud.DataSupport;
 
 public class Notes_Data_table extends DataSupport {
     private String content;
-    private String date;
+    private long date;
+    private long create_time;
+
+    public long getCreate_time() {
+        return create_time;
+    }
+
+    public void setCreate_time(long create_time) {
+        this.create_time = create_time;
+    }
 
     public String getContent() {
         return content;
@@ -18,11 +27,11 @@ public class Notes_Data_table extends DataSupport {
         this.content = content;
     }
 
-    public String getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
     }
 }
