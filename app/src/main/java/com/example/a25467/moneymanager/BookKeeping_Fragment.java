@@ -3,6 +3,7 @@ package com.example.a25467.moneymanager;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,12 @@ import java.util.List;
 public class BookKeeping_Fragment extends Fragment implements View.OnClickListener{
     Button a,b,c;
     int change=1;
+    public int getChange(){
+        return change;
+    }
+    public void setChange(int change){
+        this.change=change;
+    }
     private List<AccountBook>accountBookList=new ArrayList<>();
 
     public BookKeeping_Fragment(){
@@ -41,12 +48,17 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
         a=(Button)getActivity().findViewById(R.id.a);
         b=(Button)getActivity().findViewById(R.id.b);
         c=(Button)getActivity().findViewById(R.id.c);
-        ImageButton jia1=(ImageButton)getActivity().findViewById(R.id.jia1);
+        //ImageButton jia1=(ImageButton)getActivity().findViewById(R.id.jia1);
         changetextcolor();
        a.setOnClickListener(this);
        b.setOnClickListener(this);
        c.setOnClickListener(this);
-       jia1.setOnClickListener(this);
+       //jia1.setOnClickListener(this);
+
+
+
+
+
 
         initAccountBook();
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list1);
@@ -71,7 +83,7 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
             case R.id.c:
                 change=3;
                 break;
-            case R.id.jia1:
+            /*case R.id.jia1:
                 if (change==1){
                     Intent intent=new Intent(getActivity(),New_Pay.class);
                     startActivity(intent);
@@ -84,8 +96,29 @@ public class BookKeeping_Fragment extends Fragment implements View.OnClickListen
 
                 }
 
-                break;
+                break;*/
+                default:
+                    break;
         }
+
+       /* FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.jia1);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (change==1){
+                    Intent intent=new Intent(getContext(),New_Pay.class);
+                    startActivity(intent);
+                }
+                else if (change==2){
+                    Intent intent=new Intent(getContext(),New_Income.class);
+                    startActivity(intent);
+                }
+                else if (change==3){
+                    Toast.makeText(getContext(),"没有什么可以新建的！",Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });*/
 
         changetextcolor();
 

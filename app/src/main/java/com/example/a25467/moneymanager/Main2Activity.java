@@ -1,15 +1,22 @@
 package com.example.a25467.moneymanager;
 
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,20 +28,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
+    int change=4;
     private TextView title,item_notes,item_bookkeeping;
     private ViewPager vp;
     private New_Notes_Fragment newNotes;
     private BookKeeping_Fragment bookKeeping;
     private List<Fragment> mFragementList=new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
+    private DrawerLayout mDrawerLayout;
+
 
 
     String []titles=new String[]{"便签","记账"};
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        //getSupportActionBar().hide();
         setContentView(R.layout.activity_main2);
+        Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
+        NavigationView navView=(NavigationView)findViewById(R.id.nav_view);
+        ActionBar actionBar=getSupportActionBar();
+        if (actionBar !=null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_launcher_background);
+        }
+        navView.setCheckedItem(R.id.nav_name);
+        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                mDrawerLayout.closeDrawers();
+                return false;
+            }
+        });
+
+
+
+
+
+
+
+
+        FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.jia1);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
         /*BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
         bookKepping_data_table.setDate(2017_02_05);
         bookKepping_data_table.setMoney(99);
@@ -117,13 +162,17 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View v){
+
         switch (v.getId()){
             case R.id.item_notes:
                 vp.setCurrentItem(0,true);
+                change=4;
                 break;
             case R.id.item_Book_Keepping:
                 vp.setCurrentItem(1,true);
+                change=1;
                 break;
+
             default:
                     break;
         }
@@ -157,4 +206,5 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
         }
     }
+
 }

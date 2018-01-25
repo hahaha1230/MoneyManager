@@ -1,61 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/drawer_layout"
     tools:context="com.example.a25467.moneymanager.Main2Activity">
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/colorAccent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/title"
-            android:layout_centerInParent="true"
-            android:text="便签"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp"/>
-    </RelativeLayout>
+        android:layout_height="match_parent">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:id="@+id/toolbar"
+            android:background="?attr/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/mainViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="1dp"
-        android:background="@color/white"
-        android:baselineAligned="false"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
-        >
-        <TextView
-            android:layout_width="0dp"
+            >
+        </android.support.v7.widget.Toolbar>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:id="@+id/item_notes"
-            android:textSize="15dp"
-            android:gravity="center_vertical|center_horizontal"
-            android:text="便签"/>
+            android:orientation="vertical"
+            android:layout_marginTop="40dp"
+            android:layout_gravity="right"
+            >
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorAccent">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/title"
+                    android:layout_centerInParent="true"
+                    android:text="便签"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="20sp"/>
+            </RelativeLayout>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:id="@+id/item_Book_Keepping"
-            android:text="记账"
-            android:textSize="15dp"
-            android:gravity="center"/>
+            <android.support.v4.view.ViewPager
+                android:id="@+id/mainViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/jia1"
+                android:src="@drawable/jia"
+                android:layout_margin="16dp"
+                android:layout_gravity="bottom|right"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:baselineAligned="false"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                >
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:id="@+id/item_notes"
+                    android:textSize="15dp"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="便签"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:id="@+id/item_Book_Keepping"
+                    android:text="记账"
+                    android:textSize="15dp"
+                    android:gravity="center"/>
 
 
-    </LinearLayout>
+            </LinearLayout>
 
 
-</LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+    <android.support.design.widget.NavigationView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/nav_view"
+        android:layout_gravity="start"
+        app:menu="@menu/nav_menu"
+        app:headerLayout="@layout/nav_header">
+
+    </android.support.design.widget.NavigationView>
+
+
+
+
+
+</android.support.v4.widget.DrawerLayout>
+

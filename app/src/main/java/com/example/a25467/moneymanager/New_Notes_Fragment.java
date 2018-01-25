@@ -2,6 +2,7 @@ package com.example.a25467.moneymanager;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +24,8 @@ import java.util.List;
 
 public class New_Notes_Fragment extends Fragment {
 
+
+
     private List<Notesss> notesList=new ArrayList<>();
 
 
@@ -39,14 +42,27 @@ public class New_Notes_Fragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
 
-        ImageButton jia=(ImageButton)getActivity().findViewById(R.id.jia);
+
+       /* FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.jia1);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    Intent intent=new Intent(getContext(),NewNote_Activity.class);
+                    startActivity(intent);
+
+
+            }
+        });*/
+
+       /* ImageButton jia=(ImageButton)getActivity().findViewById(R.id.jia);
         jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(getActivity(),NewNote_Activity.class);
                 startActivity(intent);
             }
-        });
+        });*/
 
         /*BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
         bookKepping_data_table.setDate(" 2017年");
@@ -68,6 +84,7 @@ public class New_Notes_Fragment extends Fragment {
     }
 
     private void initNotes(){
+
         String m,n;
         List <Notes_Data_table>notes_data_tables=DataSupport.findAll(Notes_Data_table.class);
         for (Notes_Data_table nn:notes_data_tables) {

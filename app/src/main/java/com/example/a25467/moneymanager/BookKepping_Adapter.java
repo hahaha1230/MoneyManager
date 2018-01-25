@@ -70,7 +70,6 @@ public class BookKepping_Adapter extends RecyclerView.Adapter<BookKepping_Adapte
                         }
                     });
                     dialog.show();
-
                 }
             }
         });
