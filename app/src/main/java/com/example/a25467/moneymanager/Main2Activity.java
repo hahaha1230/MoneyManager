@@ -1,5 +1,6 @@
 package com.example.a25467.moneymanager;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -72,13 +73,19 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
 
 
-        FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.jia1);
+        /*FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.jia1);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (change==4){
+                    Intent intent=new Intent(Main2Activity.this,NewNote_Activity.class);
+                    startActivity(intent);
+                }
+
+
 
             }
-        });
+        });*/
 
         /*BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
         bookKepping_data_table.setDate(2017_02_05);

@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/drawer_layout">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_gravity="center">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,15 +31,34 @@
             android:text="总计"
             android:id="@+id/c"/>
     </LinearLayout>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/swipe_refresh1"
+            android:layout_marginTop="50dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <android.support.v7.widget.RecyclerView
+
+        <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+
+        android:layout_marginTop="50dp"
         android:id="@+id/recy_list1"
         android:dividerHeight="1dp">
 
-    </android.support.v7.widget.RecyclerView>
+
+         </android.support.v7.widget.RecyclerView>
+        </android.support.v4.widget.SwipeRefreshLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/jia1"
+            android:src="@drawable/jia"
+            android:layout_margin="16dp"
+            android:layout_gravity="bottom|right"
+            />
+</FrameLayout>
 
 
-
-</LinearLayout>
+</android.support.v4.widget.DrawerLayout>
