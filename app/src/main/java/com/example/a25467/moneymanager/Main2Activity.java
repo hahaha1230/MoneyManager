@@ -1,30 +1,33 @@
 package com.example.a25467.moneymanager;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.FileProvider;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.litepal.LitePal;
-import org.litepal.crud.DataSupport;
-import org.litepal.tablemanager.Connector;
-
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +40,14 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private List<Fragment> mFragementList=new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
     private DrawerLayout mDrawerLayout;
+    private NavigationView navigationView;
+    private Uri imageUri;
+    private ImageView picture;
+    private static final int TAKE_PHOTO=1;
+    public File outputImage;
+
+
+   // private CircleImageView circleImageView;
 
 
 
@@ -51,58 +62,44 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
-        NavigationView navView=(NavigationView)findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+      //  NavigationView navView=(NavigationView)findViewById(R.id.nav_view);
         ActionBar actionBar=getSupportActionBar();
         if (actionBar !=null){
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_launcher_background);
+            actionBar.setHomeAsUpIndicator(R.drawable.category);
         }
-        navView.setCheckedItem(R.id.nav_name);
-        navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+
+        View headerview = navigationView.inflateHeaderView(R.layout.nav_header);
+        picture=(ImageView)headerview.findViewById(R.id.icon_image);
+        picture.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                mDrawerLayout.closeDrawers();
-                return false;
+            public void onClick(View v) {
+                picture.showContextMenu();
+            }
+        });
+
+       // final CircleImageView head_iv = (CircleImageView) headerview.findViewById(R.id.icon_image);
+      /*head_iv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                head_iv.showContextMenu();
+                //Toast.makeText(Main2Activity.this, "jjjjjjj", Toast.LENGTH_SHORT).show();
+            }
+        });*/
+
+
+        picture.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                menu.add(0, 0, 0, "拍照");
+                menu.add(1, 1, 1, "从相册中选");
+
             }
         });
 
 
 
-
-
-
-
-
-        /*FloatingActionButton fab=(FloatingActionButton)findViewById(R.id.jia1);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (change==4){
-                    Intent intent=new Intent(Main2Activity.this,NewNote_Activity.class);
-                    startActivity(intent);
-                }
-
-
-
-            }
-        });*/
-
-        /*BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
-        bookKepping_data_table.setDate(2017_02_05);
-        bookKepping_data_table.setMoney(99);
-        bookKepping_data_table.setCategory(1);
-        bookKepping_data_table.save();*/
-        //Connector.getDatabase();
-     // LitePal.getDatabase();
-
-
-
-      /* initNotes();
-       RecyclerView recyclerView=(RecyclerView)findViewById(R.id.recy_list);
-       LinearLayoutManager layoutManager=new LinearLayoutManager(this);
-       recyclerView.setLayoutManager(layoutManager);
-       Notes_Adapter adapter=new Notes_Adapter(notesList);
-       recyclerView.setAdapter(adapter);*/
 
 
         initViews();
@@ -132,22 +129,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
-   /* private void initNotes(){
-        int max= DataSupport.count(Notes_Data_table.class);
-
-       String m,n;
-        for (int i=1;i<=max;i++){
-            Notes_Data_table aa= DataSupport.find(Notes_Data_table.class,i);
-            m=aa.getContent();
-            n=aa.getDate();
-
-            Notesss notes=new Notesss(m,n);
-            notesList.add(notes);
-
-        }
-    }*/
-
     private void initViews(){
         title=(TextView)findViewById(R.id.title);
         item_notes=(TextView)findViewById(R.id.item_notes);
@@ -170,6 +151,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v){
 
+
         switch (v.getId()){
             case R.id.item_notes:
                 vp.setCurrentItem(0,true);
@@ -179,11 +161,71 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 vp.setCurrentItem(1,true);
                 change=1;
                 break;
+            case R.id.icon_image:
+                break;
 
             default:
                     break;
         }
+
     }
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        switch (item.getGroupId()){
+            case 0:
+                 outputImage=new File(getExternalCacheDir(),"output_image.jpg");
+                try{
+                    if (outputImage.exists()){
+                        outputImage.delete();
+                    }
+                    outputImage.createNewFile();
+                }catch (IOException e){
+                    e.printStackTrace();
+                }
+                if (Build.VERSION.SDK_INT>=24){
+                    imageUri= FileProvider.getUriForFile(Main2Activity.this,
+                            "com.example.a25467.moneymanager.fileprovider",outputImage);
+                }
+                else {
+                    imageUri=Uri.fromFile(outputImage);
+                }
+                Intent intent=new Intent("android.media.action.IMAGE_CAPTURE");
+                intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+                startActivityForResult(intent,TAKE_PHOTO);
+                break;
+            case 1:
+                break;
+                default:
+                    break;
+
+        }
+        return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data){
+
+        View headerview = navigationView.inflateHeaderView(R.layout.nav_header);
+        picture = (ImageView) headerview.findViewById(R.id.icon_image);
+        switch (requestCode){
+            case TAKE_PHOTO:
+                if (resultCode==RESULT_OK){
+                    try{
+                        Bitmap bmp=BitmapFactory.decodeFile(outputImage.getAbsolutePath());
+                        Log.d("hhh",String.valueOf(bmp));
+
+                        //Bitmap bitmap= BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
+                        picture.setImageBitmap(bmp);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+
+                }
+                break;
+                default:
+                    break;
+        }
+    }
+
 
     public class FragmentAdapter extends FragmentPagerAdapter{
 
@@ -212,6 +254,17 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
            item_bookkeeping.setTextColor(Color.parseColor("#66CDAA"));
 
         }
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        switch (item.getItemId()){
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                break;
+                default:
+                    break;
+        }
+        return true;
     }
 
 }

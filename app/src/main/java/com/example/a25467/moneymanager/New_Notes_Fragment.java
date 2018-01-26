@@ -104,6 +104,7 @@ public class New_Notes_Fragment extends Fragment {
     }
 
     private void initNotes(){
+        notesList.clear();
 
         String m,n;
         List <Notes_Data_table>notes_data_tables=DataSupport.findAll(Notes_Data_table.class);
