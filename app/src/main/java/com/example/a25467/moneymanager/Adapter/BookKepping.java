@@ -1,4 +1,4 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Adapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.a25467.moneymanager.Class.AccountBook;
+import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
+import com.example.a25467.moneymanager.R;
+
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -16,7 +20,7 @@ import java.util.List;
  * Created by 25467 on 2018/1/23.
  */
 
-public class BookKepping_Adapter extends RecyclerView.Adapter<BookKepping_Adapter.ViewHolder>{
+public class BookKepping extends RecyclerView.Adapter<BookKepping.ViewHolder>{
     private List<AccountBook> mAccountBook;
     static  class ViewHolder extends  RecyclerView.ViewHolder{
         View nview;
@@ -27,7 +31,7 @@ public class BookKepping_Adapter extends RecyclerView.Adapter<BookKepping_Adapte
             brief_display=(TextView)view.findViewById(R.id.brief);
         }
     }
-    public BookKepping_Adapter(List<AccountBook>accountBooks){
+    public BookKepping(List<AccountBook>accountBooks){
         mAccountBook=accountBooks;
     }
     @Override

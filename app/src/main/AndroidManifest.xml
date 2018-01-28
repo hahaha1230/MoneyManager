@@ -22,22 +22,20 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths"/>
         </provider>
-        <activity android:name=".MainActivity" >
+        <activity android:name=".Activity.Login" >
+
+        </activity>
+        <activity android:name=".Activity.NewPay"></activity>
+        <activity android:name=".Activity.NewIncome"></activity>
+        <activity android:name=".Activity.MainInterface">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Main2Activity">
+        <activity android:name=".Activity.NewNote" />
 
-        </activity>
-        <activity android:name=".NewNote_Activity" />
-        <activity android:name=".Pay_Activity" />
-        <activity android:name=".Income_Activity" />
-        <activity android:name=".Sum" />
-        <activity android:name=".New_Pay" />
-        <activity android:name=".New_Income"></activity>
     </application>
 
 </manifest>

@@ -3,7 +3,7 @@
     <dbname value="Data"></dbname>
     <version value="10"></version>
     <list>
-       <mapping class="com.example.a25467.moneymanager.Notes_Data_table"></mapping>
-        <mapping class="com.example.a25467.moneymanager.BookKepping_Data_Table"></mapping>
+       <mapping class="com.example.a25467.moneymanager.Datatable.Notes_Data_table"></mapping>
+        <mapping class="com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table"></mapping>
     </list>
 </litepal>

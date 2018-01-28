@@ -1,16 +1,24 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Activity;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -25,18 +33,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.a25467.moneymanager.Fragment.BookKeeping;
+import com.example.a25467.moneymanager.Fragment.NewNotes;
+import com.example.a25467.moneymanager.R;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
+public class MainInterface extends AppCompatActivity implements View.OnClickListener{
     int change=4;
     private TextView title,item_notes,item_bookkeeping;
     private ViewPager vp;
-    private New_Notes_Fragment newNotes;
-    private BookKeeping_Fragment bookKeeping;
+    private NewNotes newNotes;
+    private BookKeeping bookKeeping;
     private List<Fragment> mFragementList=new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
     private DrawerLayout mDrawerLayout;
@@ -44,10 +57,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
     private Uri imageUri;
     private ImageView picture;
     private static final int TAKE_PHOTO=1;
+    private  static  final int CHOOSE_PHOTO=2;
     public File outputImage;
+    public  View headerview;
 
 
-   // private CircleImageView circleImageView;
+    // private CircleImageView circleImageView;
 
 
 
@@ -70,7 +85,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             actionBar.setHomeAsUpIndicator(R.drawable.category);
         }
 
-        View headerview = navigationView.inflateHeaderView(R.layout.nav_header);
+        //若点击头像，则弹出对话框让用户选择拍照或从手机图库中选择
+        headerview = navigationView.inflateHeaderView(R.layout.nav_header);
         picture=(ImageView)headerview.findViewById(R.id.icon_image);
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,14 +95,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-       // final CircleImageView head_iv = (CircleImageView) headerview.findViewById(R.id.icon_image);
-      /*head_iv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                head_iv.showContextMenu();
-                //Toast.makeText(Main2Activity.this, "jjjjjjj", Toast.LENGTH_SHORT).show();
-            }
-        });*/
+
 
 
         picture.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
@@ -102,6 +111,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
 
 
+        //设置滑动
         initViews();
         mFragmentAdapter=new FragmentAdapter(this.getSupportFragmentManager(),mFragementList);
         vp.setOffscreenPageLimit(2);
@@ -139,8 +149,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
        item_bookkeeping.setOnClickListener(this);
 
         vp=(ViewPager)findViewById(R.id.mainViewPager);
-        bookKeeping=new BookKeeping_Fragment();
-        newNotes=new New_Notes_Fragment();
+        bookKeeping=new BookKeeping();
+        newNotes=new NewNotes();
 
 
 
@@ -183,7 +193,7 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                 }
                 if (Build.VERSION.SDK_INT>=24){
-                    imageUri= FileProvider.getUriForFile(Main2Activity.this,
+                    imageUri= FileProvider.getUriForFile(MainInterface.this,
                             "com.example.a25467.moneymanager.fileprovider",outputImage);
                 }
                 else {
@@ -193,18 +203,49 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
                 startActivityForResult(intent,TAKE_PHOTO);
                 break;
+                //调用手机相册中的照片
             case 1:
+                if (ContextCompat.checkSelfPermission(MainInterface.this, Manifest.permission
+                .WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(MainInterface.this,new
+                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+                }
+                else {
+                    openAlbum();
+                }
                 break;
                 default:
                     break;
 
         }
+
         return true;
     }
+    private void  openAlbum(){
+        Intent intent=new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent,CHOOSE_PHOTO);
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String[] permission,int [] grantResults){
+        switch (requestCode){
+            case 1:
+                if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED){
+                    openAlbum();
+                }
+                else {
+                    Toast.makeText(this,"您拒绝了请求",Toast.LENGTH_SHORT).show();
+                }
+                break;
+                default:
+                    break;
+        }
+
+    }
+
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){
 
-        View headerview = navigationView.inflateHeaderView(R.layout.nav_header);
         picture = (ImageView) headerview.findViewById(R.id.icon_image);
         switch (requestCode){
             case TAKE_PHOTO:
@@ -212,6 +253,8 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
                     try{
                         Bitmap bmp=BitmapFactory.decodeFile(outputImage.getAbsolutePath());
                         Log.d("hhh",String.valueOf(bmp));
+                        //picture.setImageDrawable(null);
+                        //picture.setImageResource(null);
 
                         //Bitmap bitmap= BitmapFactory.decodeStream(getContentResolver().openInputStream(imageUri));
                         picture.setImageBitmap(bmp);
@@ -221,10 +264,84 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 
                 }
                 break;
+            case CHOOSE_PHOTO:
+                if (requestCode==RESULT_OK){
+                    //判断手机系统版本号
+                    if (Build.VERSION.SDK_INT>=19){
+                        //4.4以及以上版本使用这个方法处理图片
+                        handleImageOnKitKat(data);
+                    }
+                    else {
+                        //4.4以下版本使用这个方法处理图片
+                        handleImageBeforeKitKat(data);
+                    }
+                }
+                break;
                 default:
                     break;
         }
     }
+    @TargetApi(19)
+    private void handleImageOnKitKat(Intent data){
+        String imagePath=null;
+        Uri uri=data.getData();
+        if (DocumentsContract.isDocumentUri(this,uri)){
+            //如果是document类型的URI，则通过document id处理
+            String docID=DocumentsContract.getDocumentId(uri);
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())){
+                String id=docID.split(":")[1];//解析出数字格式ID
+                String selection=MediaStore.Images.Media._ID+"="+id;
+                imagePath=getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
+            }else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())){
+                Uri contentUri= ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
+                        Long.valueOf(docID));
+                imagePath=getImagePath(contentUri,null);
+            }
+        }
+        else if ("content".equalsIgnoreCase(uri.getScheme())){
+            //如果是content类型的URI，则使用普通方式处理
+            imagePath=getImagePath(uri,null);
+        }
+        else if ("file".equalsIgnoreCase(uri.getScheme())){
+            //如果是file类型的uri，直接获取图片路径即可
+            imagePath=uri.getPath();
+        }
+        displayImage(imagePath);//根据路径显示图片
+    }
+    private void handleImageBeforeKitKat(Intent data){
+        Uri uri=data.getData();
+        String imagePath=getImagePath(uri,null);
+        displayImage(imagePath);
+    }
+    private String getImagePath(Uri uri,String selection){
+        String path=null;
+        //通过uri和selection来获取真实的图片路径
+        Cursor cursor=getContentResolver().query(uri,null,selection,null,null);
+        if (cursor !=null){
+            if (cursor.moveToFirst()){
+                path=cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+    private void displayImage(String imagePath){
+        if (imagePath !=null){
+            Bitmap bitmap=BitmapFactory.decodeFile(imagePath);
+            Log.d("hhh",String.valueOf(bitmap));
+            picture.setImageBitmap(bitmap);
+        }
+        else {
+            Toast.makeText(this,"获得图片失败",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+
+
+
 
 
     public class FragmentAdapter extends FragmentPagerAdapter{
@@ -266,5 +383,6 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
         }
         return true;
     }
+
 
 }

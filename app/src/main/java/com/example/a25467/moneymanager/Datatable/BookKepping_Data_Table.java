@@ -1,4 +1,4 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Datatable;
 
 import org.litepal.crud.DataSupport;
 

@@ -1,4 +1,4 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,13 +7,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.example.a25467.moneymanager.Adapter.Notes;
+import com.example.a25467.moneymanager.Activity.NewNote;
+import com.example.a25467.moneymanager.Datatable.Notes_Data_table;
+import com.example.a25467.moneymanager.Class.Notesss;
+import com.example.a25467.moneymanager.R;
 
 import org.litepal.crud.DataSupport;
 
@@ -24,7 +27,7 @@ import java.util.List;
  * Created by 25467 on 2018/1/21.
  */
 
-public class New_Notes_Fragment extends Fragment {
+public class NewNotes extends Fragment {
 
 
 
@@ -34,7 +37,7 @@ public class New_Notes_Fragment extends Fragment {
 
 
 
-    public New_Notes_Fragment(){
+    public NewNotes(){
 
     }
     @Override
@@ -44,6 +47,7 @@ public class New_Notes_Fragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        //下拉刷新，重新从数据库中获取内容
         swipeRefreshLayout=(SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -53,50 +57,27 @@ public class New_Notes_Fragment extends Fragment {
             }
         });
 
+        //点击“+”号，进入新建界面
         FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.jia);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent intent=new Intent(getActivity(),NewNote_Activity.class);
+                    Intent intent=new Intent(getActivity(),NewNote.class);
                     startActivity(intent);
             }
         });
 
 
-       /* FloatingActionButton fab=(FloatingActionButton)getActivity().findViewById(R.id.jia1);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    Intent intent=new Intent(getContext(),NewNote_Activity.class);
-                    startActivity(intent);
-
-
-            }
-        });*/
-
-       /* ImageButton jia=(ImageButton)getActivity().findViewById(R.id.jia);
-        jia.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(getActivity(),NewNote_Activity.class);
-                startActivity(intent);
-            }
-        });*/
-
-        /*BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
-        bookKepping_data_table.setDate(" 2017年");
-        bookKepping_data_table.setName("huahua");
-        bookKepping_data_table.setWhere("xizhaisunzhuangchun");
-        bookKepping_data_table.save();*/
 
 
 
+
+        //将内容显示在界面上
         initNotes();
        RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list);
        LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
        recyclerView.setLayoutManager(layoutManager);
-       Notes_Adapter adapter=new Notes_Adapter(notesList);
+       Notes adapter=new Notes(notesList);
        recyclerView.setAdapter(adapter);
 
 
@@ -143,12 +124,13 @@ public class New_Notes_Fragment extends Fragment {
 
         }*/
     }
+    //刷新
     private void refresh(){
         initNotes();
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        Notes_Adapter adapter=new Notes_Adapter(notesList);
+        Notes adapter=new Notes(notesList);
         recyclerView.setAdapter(adapter);
         Toast.makeText(getContext(),"刷新成功！",Toast.LENGTH_SHORT).show();
         swipeRefreshLayout.setRefreshing(false);

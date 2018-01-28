@@ -1,4 +1,4 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Class;
 
 /**
  * Created by 25467 on 2018/1/23.

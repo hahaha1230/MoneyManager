@@ -1,4 +1,4 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Class;
 
 import org.litepal.crud.DataSupport;
 

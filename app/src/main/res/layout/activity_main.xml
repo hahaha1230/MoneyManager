@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center_vertical"
     android:stretchColumns="0,3"
-    tools:context="com.example.a25467.moneymanager.MainActivity">
+    tools:context="com.example.a25467.moneymanager.Activity.Login">
 
 <TableRow>
  <TextView />

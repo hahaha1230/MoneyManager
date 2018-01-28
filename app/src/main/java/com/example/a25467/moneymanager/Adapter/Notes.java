@@ -1,4 +1,4 @@
-package com.example.a25467.moneymanager;
+package com.example.a25467.moneymanager.Adapter;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -7,7 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.a25467.moneymanager.Datatable.Notes_Data_table;
+import com.example.a25467.moneymanager.Class.Notesss;
+import com.example.a25467.moneymanager.R;
 
 import org.litepal.crud.DataSupport;
 
@@ -17,7 +20,7 @@ import java.util.List;
  * Created by 25467 on 2018/1/22.
  */
 
-public class Notes_Adapter extends RecyclerView.Adapter <Notes_Adapter.ViewHolder>{
+public class Notes extends RecyclerView.Adapter <Notes.ViewHolder>{
     private List <Notesss> mNotes;
     static class ViewHolder extends RecyclerView.ViewHolder{
         View notesView;
@@ -30,7 +33,7 @@ public class Notes_Adapter extends RecyclerView.Adapter <Notes_Adapter.ViewHolde
             date_display=(TextView)view.findViewById(R.id.date_display);
         }
     }
-    public Notes_Adapter(List <Notesss> notes){
+    public Notes(List <Notesss> notes){
         mNotes=notes;
     }
     @Override
