@@ -15,10 +15,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 
-import com.example.a25467.moneymanager.Class.AccountBook;
-import com.example.a25467.moneymanager.Activity.NewIncome;
-import com.example.a25467.moneymanager.Activity.NewPay;
-import com.example.a25467.moneymanager.Adapter.BookKepping;
+import com.example.a25467.moneymanager.Class.AccountBookClass;
+import com.example.a25467.moneymanager.Activity.NewIncomeActivity;
+import com.example.a25467.moneymanager.Activity.NewPayActivity;
+import com.example.a25467.moneymanager.Adapter.BookKeppingAdapter;
 import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
 import com.example.a25467.moneymanager.R;
 
@@ -31,14 +31,14 @@ import java.util.List;
  * Created by 25467 on 2018/1/21.
  */
 
-public class BookKeeping extends Fragment implements View.OnClickListener{
+public class BookKeepingFragment extends Fragment implements View.OnClickListener{
     Button a,b,c;//代表收入、支出、总计
     int change=1;//代表三个button状态
 
-    private List<AccountBook>accountBookList=new ArrayList<>();
+    private List<AccountBookClass>accountBookList=new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public BookKeeping(){
+    public BookKeepingFragment(){
 
     }
     @Override
@@ -75,12 +75,12 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
             public void onClick(View v) {
                 //若在支出界面，点击“+”进入新建支出界面
                 if (change==1){
-                    Intent intent=new Intent(getContext(),NewPay.class);
+                    Intent intent=new Intent(getContext(),NewPayActivity.class);
                     startActivity(intent);
                 }
                 //若在收入界面，点击“+”进入新建收入界面
                 else if (change==2){
-                    Intent intent=new Intent(getContext(),NewIncome.class);
+                    Intent intent=new Intent(getContext(),NewIncomeActivity.class);
                     startActivity(intent);
                 }
                 //若在总计界面，点击“+”弹出提示
@@ -107,7 +107,7 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list1);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        BookKepping adapter=new BookKepping(accountBookList);
+        BookKeppingAdapter adapter=new BookKeppingAdapter(accountBookList);
         recyclerView.setAdapter(adapter);
 
 
@@ -142,7 +142,7 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list1);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        BookKepping adapter=new BookKepping(accountBookList);
+        BookKeppingAdapter adapter=new BookKeppingAdapter(accountBookList);
         recyclerView.setAdapter(adapter);
     }
 
@@ -158,7 +158,7 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
                 List<BookKepping_Data_Table> aas= DataSupport.where("category=?","1")
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table aa:aas){
-                    AccountBook accountBook=new AccountBook("您于"+String.valueOf(aa.getDate())+
+                    AccountBookClass accountBook=new AccountBookClass("您于"+String.valueOf(aa.getDate())+
                             "花费了"+String.valueOf(aa.getMoney()),aa.getCreate_time());
                     accountBookList.add(accountBook);
                 }
@@ -167,7 +167,7 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
                 List<BookKepping_Data_Table>bbs= DataSupport.where("category=?","2")
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table bb:bbs){
-                    AccountBook accountBook=new AccountBook("您于"+String.valueOf(bb.getDate())+
+                    AccountBookClass accountBook=new AccountBookClass("您于"+String.valueOf(bb.getDate())+
                             "收入了"+String.valueOf(bb.getMoney()),bb.getCreate_time());
                     accountBookList.add(accountBook);
                 }
@@ -186,7 +186,7 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
                     income+=dd.getMoney();
                 }
                 sum=income-pay;
-                AccountBook accountBook=new AccountBook("您一共花费了"+String.valueOf(pay)+"元，"
+                AccountBookClass accountBook=new AccountBookClass("您一共花费了"+String.valueOf(pay)+"元，"
                         +"收入了"+String.valueOf(income)+"元。总收入为"+String.valueOf(sum)+"元",
                         System.currentTimeMillis());
                 accountBookList.add(accountBook);
@@ -221,7 +221,7 @@ public class BookKeeping extends Fragment implements View.OnClickListener{
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list1);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        BookKepping adapter=new BookKepping(accountBookList);
+        BookKeppingAdapter adapter=new BookKeppingAdapter(accountBookList);
         recyclerView.setAdapter(adapter);
         Toast.makeText(getContext(),"刷新成功！",Toast.LENGTH_SHORT).show();
         swipeRefreshLayout.setRefreshing(false);

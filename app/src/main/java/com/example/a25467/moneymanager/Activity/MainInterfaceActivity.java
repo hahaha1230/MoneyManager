@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -35,8 +36,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.a25467.moneymanager.Fragment.BookKeeping;
-import com.example.a25467.moneymanager.Fragment.NewNotes;
+import com.example.a25467.moneymanager.Fragment.BookKeepingFragment;
+import com.example.a25467.moneymanager.Fragment.NewNotesFragment;
 import com.example.a25467.moneymanager.R;
 
 import java.io.File;
@@ -44,12 +45,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainInterface extends AppCompatActivity implements View.OnClickListener{
+public class MainInterfaceActivity extends AppCompatActivity implements View.OnClickListener{
     int change=4;
     private TextView title,item_notes,item_bookkeeping;
     private ViewPager vp;
-    private NewNotes newNotes;
-    private BookKeeping bookKeeping;
+    private NewNotesFragment newNotes;
+    private BookKeepingFragment bookKeeping;
     private List<Fragment> mFragementList=new ArrayList<Fragment>();
     private FragmentAdapter mFragmentAdapter;
     private DrawerLayout mDrawerLayout;
@@ -84,6 +85,28 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.category);
         }
+
+
+        navigationView.setCheckedItem(R.id.nav_name);//设置默认为姓名
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                if (item.getItemId()==R.id.share){
+                    Intent intent=new Intent(Intent.ACTION_SEND);
+                    intent.setType("image/*");
+                    intent.putExtra(Intent.EXTRA_SUBJECT,"share");
+                    intent.putExtra(Intent.EXTRA_TEXT,"i have successfully share my message through my app");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(Intent.createChooser(intent,getTitle()));
+                    //Toast.makeText(MainInterfaceActivity.this,"hhhhh",Toast.LENGTH_SHORT).show();
+                }
+                else if (item.getItemId()==R.id.setting){
+                    Intent intent=new Intent(MainInterfaceActivity.this,SettingActivity.class);
+                    startActivity(intent);
+                }
+                return false;
+            }
+        });
 
         //若点击头像，则弹出对话框让用户选择拍照或从手机图库中选择
         headerview = navigationView.inflateHeaderView(R.layout.nav_header);
@@ -149,8 +172,8 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
        item_bookkeeping.setOnClickListener(this);
 
         vp=(ViewPager)findViewById(R.id.mainViewPager);
-        bookKeeping=new BookKeeping();
-        newNotes=new NewNotes();
+        bookKeeping=new BookKeepingFragment();
+        newNotes=new NewNotesFragment();
 
 
 
@@ -193,7 +216,7 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
                     e.printStackTrace();
                 }
                 if (Build.VERSION.SDK_INT>=24){
-                    imageUri= FileProvider.getUriForFile(MainInterface.this,
+                    imageUri= FileProvider.getUriForFile(MainInterfaceActivity.this,
                             "com.example.a25467.moneymanager.fileprovider",outputImage);
                 }
                 else {
@@ -205,9 +228,9 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
                 break;
                 //调用手机相册中的照片
             case 1:
-                if (ContextCompat.checkSelfPermission(MainInterface.this, Manifest.permission
+                if (ContextCompat.checkSelfPermission(MainInterfaceActivity.this, Manifest.permission
                 .WRITE_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-                    ActivityCompat.requestPermissions(MainInterface.this,new
+                    ActivityCompat.requestPermissions(MainInterfaceActivity.this,new
                     String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
                 }
                 else {
@@ -265,7 +288,8 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case CHOOSE_PHOTO:
-                if (requestCode==RESULT_OK){
+                //if (requestCode==RESULT_OK){
+                    Log.d("hhh","223");
                     //判断手机系统版本号
                     if (Build.VERSION.SDK_INT>=19){
                         //4.4以及以上版本使用这个方法处理图片
@@ -275,10 +299,10 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
                         //4.4以下版本使用这个方法处理图片
                         handleImageBeforeKitKat(data);
                     }
-                }
+                //}
                 break;
                 default:
-                    break;
+                  break;
         }
     }
     @TargetApi(19)
@@ -287,26 +311,32 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
         Uri uri=data.getData();
         if (DocumentsContract.isDocumentUri(this,uri)){
             //如果是document类型的URI，则通过document id处理
+            Log.d("hhh","111");
             String docID=DocumentsContract.getDocumentId(uri);
             if ("com.android.providers.media.documents".equals(uri.getAuthority())){
                 String id=docID.split(":")[1];//解析出数字格式ID
                 String selection=MediaStore.Images.Media._ID+"="+id;
                 imagePath=getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
+                Log.d("hhh","112");
             }else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())){
                 Uri contentUri= ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
                         Long.valueOf(docID));
                 imagePath=getImagePath(contentUri,null);
+                Log.d("hhh","113");
             }
         }
         else if ("content".equalsIgnoreCase(uri.getScheme())){
             //如果是content类型的URI，则使用普通方式处理
             imagePath=getImagePath(uri,null);
+            Log.d("hhh","114");
         }
         else if ("file".equalsIgnoreCase(uri.getScheme())){
             //如果是file类型的uri，直接获取图片路径即可
             imagePath=uri.getPath();
+            Log.d("hhh","115");
         }
         displayImage(imagePath);//根据路径显示图片
+        Log.d("hhh","116");
     }
     private void handleImageBeforeKitKat(Intent data){
         Uri uri=data.getData();
@@ -326,6 +356,7 @@ public class MainInterface extends AppCompatActivity implements View.OnClickList
         return path;
     }
     private void displayImage(String imagePath){
+        Log.d("hhh","117");
         if (imagePath !=null){
             Bitmap bitmap=BitmapFactory.decodeFile(imagePath);
             Log.d("hhh",String.valueOf(bitmap));

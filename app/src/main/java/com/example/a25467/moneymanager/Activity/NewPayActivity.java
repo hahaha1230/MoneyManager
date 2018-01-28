@@ -16,56 +16,59 @@ import android.widget.Toast;
 import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
 import com.example.a25467.moneymanager.R;
 
-public class NewIncome extends Activity implements View.OnClickListener{
-    Button choose_Account,sure_income,quit_income;
+import java.util.Calendar;
+
+public class NewPayActivity extends Activity implements View.OnClickListener{
+    Button choose_Account, choose_date, sure_pay, quit_pay,notes_sure,notes_quit;
     TextView sure_Account;
     TextView dateDisplay;
-    EditText num,category,notes1;
+    EditText num, purpose, notes1;
     int mYear,mMonth,mDay;
-    Button choose_date;
     final int DATE_DIALOG=1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_income);
-        choose_Account=(Button)findViewById(R.id.choose_Account);
-        choose_date=(Button)findViewById(R.id.choosedate1);
-        sure_income=(Button)findViewById(R.id.sure_income);
-        quit_income=(Button)findViewById(R.id.quit_income);
-        sure_Account=(TextView)findViewById(R.id.sure_Account);
-        dateDisplay=(TextView)findViewById(R.id.dateDisplay1);
-        num=(EditText)findViewById(R.id.num);
-        category=(EditText)findViewById(R.id.category);
-        notes1=(EditText)findViewById(R.id.notes1);
+        setContentView(R.layout.activity_pay);
+        choose_date = (Button)findViewById(R.id.choose_date);
+        dateDisplay = (TextView) findViewById(R.id.dateDisplay);
+        choose_Account = (Button)findViewById(R.id.choose_Account);
+        sure_Account = (TextView)findViewById(R.id.sure_Account);
+        choose_date = (Button) findViewById(R.id.choosedate1);
+        num = (EditText) findViewById(R.id.num);
+        purpose = (EditText)findViewById(R.id.purpose);
+        notes1 = (EditText) findViewById(R.id.notes1);
+        sure_pay = (Button) findViewById(R.id.sure_pay);
+        quit_pay = (Button) findViewById(R.id.quit_pay);
+        dateDisplay = (TextView) findViewById(R.id.dateDisplay1);
         choose_Account.setOnClickListener(this);
         choose_date.setOnClickListener(this);
-        sure_income.setOnClickListener(this);
-        quit_income.setOnClickListener(this);
+        sure_pay.setOnClickListener(this);
+        quit_pay.setOnClickListener(this);
+
+        final  Calendar ca= Calendar.getInstance();
+        mYear=ca.get(Calendar.YEAR);
+        mMonth=ca.get(Calendar.MONTH);
+        mDay=ca.get(Calendar.DAY_OF_MONTH);
 
 
 
-
-        final java.util.Calendar ca= java.util.Calendar.getInstance();
-        mYear=ca.get(java.util.Calendar.YEAR);
-        mMonth=ca.get(java.util.Calendar.MONTH);
-        mDay=ca.get(java.util.Calendar.DAY_OF_MONTH);
     }
+
     @Override
     public void onClick(View v) {
+        String information =null;
         switch (v.getId()) {
             case R.id.choosedate1:
                 showDialog(DATE_DIALOG);
                 break;
+
             case R.id.choose_Account:
                 choose_Account.showContextMenu();
                 break;
-            case R.id.sure_income:
-
-                String m="";
+            case R.id.sure_pay:
                 try {
-
                     String str=dateDisplay.getText().toString();
                     str.trim();
                     String str2="";
@@ -76,35 +79,34 @@ public class NewIncome extends Activity implements View.OnClickListener{
                             }
                         }
                     }
-                    BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
-                    bookKepping_data_table.setNotes(notes1.getText().toString());
-                    bookKepping_data_table.setSource_or_purpose(category.getText().toString());
-                    bookKepping_data_table.setAccount(sure_Account.getText().toString());
+                    BookKepping_Data_Table bookKepping_data_table= new BookKepping_Data_Table();
+                    bookKepping_data_table = new BookKepping_Data_Table();
+                    bookKepping_data_table.setCategory(1);
                     bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
-                    bookKepping_data_table.setCategory(2);
+                    bookKepping_data_table.setAccount(choose_Account.getText().toString());
                     bookKepping_data_table.setDate(Long.parseLong(str2));
+                    bookKepping_data_table.setSource_or_purpose(purpose.getText().toString());
+                    bookKepping_data_table.setNotes(notes1.getText().toString());
                     bookKepping_data_table.setCreate_time(System.currentTimeMillis());
                     bookKepping_data_table.save();
-                    m="您的新的收入信息已经保存!";
-
-                } catch (NumberFormatException e) {
+                    information="您的新的支出信息已保存";
+                } catch (Exception e) {
                     e.printStackTrace();
-                    m="您输入的信息有误，请重新输入";
+                    information="您输入的信息有误，请重新输入！";
                 } finally {
-                    Toast.makeText(NewIncome.this,m,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewPayActivity.this,information,Toast.LENGTH_SHORT).show();
                 }
                 break;
 
             case R.id.quit_income:
                 sure_Account.setText(null);
-                category.setText(null);
+                purpose.setText(null);
                 dateDisplay.setText(null);
                 notes1.setText(null);
                 num.setText(null);
                 break;
             default:
                 break;
-
         }
         choose_Account.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
@@ -114,11 +116,11 @@ public class NewIncome extends Activity implements View.OnClickListener{
                 menu.add(2,2,2,"信用卡");
                 menu.add(3,3,3,"支付宝");
                 menu.add(4,4,4,"微信钱包");
-                menu.add(5,5,5,"QQ红包");
-
+                menu.add(5,5,5,"蚂蚁花呗");
+                menu.add(6,6,6,"QQ红包");
             }
-        });
 
+        });
     }
     @Override
     public boolean onContextItemSelected(MenuItem item){
@@ -139,12 +141,15 @@ public class NewIncome extends Activity implements View.OnClickListener{
                 sure_Account.setText("微信钱包");
                 break;
             case 5:
+                sure_Account.setText("蚂蚁花呗");
+                break;
+            case 6:
                 sure_Account.setText("QQ红包");
                 break;
             default:
                 break;
         }
-        return true;
+        return  true;
     }
     @Override
     protected Dialog onCreateDialog(int id){
@@ -155,8 +160,10 @@ public class NewIncome extends Activity implements View.OnClickListener{
         return null;
     }
     public void display(){
+        /*dateDisplay.setText(new StringBuffer().append(mMonth+1).append("-").append(mDay).append("-")
+                .append(mYear).append(" "));*/
         dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).append("月").append(mDay)
-                .append("日"));
+        .append("日"));
     }
     private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -168,4 +175,3 @@ public class NewIncome extends Activity implements View.OnClickListener{
         }
     };
 }
-

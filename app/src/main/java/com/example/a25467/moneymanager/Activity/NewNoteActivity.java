@@ -16,7 +16,7 @@ import com.example.a25467.moneymanager.R;
 
 import java.util.Calendar;
 
-public class NewNote extends Activity implements View.OnClickListener{
+public class NewNoteActivity extends Activity implements View.OnClickListener{
     int mYear,mMonth,mDay;
     Button choose_date,notes_sure,notes_quit;
     TextView dateDisplay;
@@ -76,7 +76,7 @@ public class NewNote extends Activity implements View.OnClickListener{
                     e.printStackTrace();
                     m="您输入的信息有误，请重新输入！";
                 } finally {
-                    Toast.makeText(NewNote.this,m,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewNoteActivity.this,m,Toast.LENGTH_SHORT).show();
                 }
                 break;
 

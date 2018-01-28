@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.a25467.moneymanager">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE">
 
-    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -14,28 +13,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <provider
-            android:authorities="com.example.a25467.moneymanager.fileprovider"
             android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.a25467.moneymanager.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
+                android:resource="@xml/file_paths" />
         </provider>
-        <activity android:name=".Activity.Login" >
 
-        </activity>
-        <activity android:name=".Activity.NewPay"></activity>
-        <activity android:name=".Activity.NewIncome"></activity>
-        <activity android:name=".Activity.MainInterface">
+        <activity android:name=".Activity.LoginActivity"></activity>
+        <activity android:name=".Activity.NewPayActivity" />
+        <activity android:name=".Activity.NewIncomeActivity" />
+        <activity android:name=".Activity.MainInterfaceActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.NewNote" />
-
+        <activity android:name=".Activity.NewNoteActivity" />
+        <activity android:name=".Activity.SettingActivity"></activity>
     </application>
 
 </manifest>

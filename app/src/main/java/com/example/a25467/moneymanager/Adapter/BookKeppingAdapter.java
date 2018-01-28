@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.a25467.moneymanager.Class.AccountBook;
+import com.example.a25467.moneymanager.Class.AccountBookClass;
 import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
 import com.example.a25467.moneymanager.R;
 
@@ -20,8 +20,8 @@ import java.util.List;
  * Created by 25467 on 2018/1/23.
  */
 
-public class BookKepping extends RecyclerView.Adapter<BookKepping.ViewHolder>{
-    private List<AccountBook> mAccountBook;
+public class BookKeppingAdapter extends RecyclerView.Adapter<BookKeppingAdapter.ViewHolder>{
+    private List<AccountBookClass> mAccountBook;
     static  class ViewHolder extends  RecyclerView.ViewHolder{
         View nview;
         TextView brief_display;
@@ -31,7 +31,7 @@ public class BookKepping extends RecyclerView.Adapter<BookKepping.ViewHolder>{
             brief_display=(TextView)view.findViewById(R.id.brief);
         }
     }
-    public BookKepping(List<AccountBook>accountBooks){
+    public BookKeppingAdapter(List<AccountBookClass>accountBooks){
         mAccountBook=accountBooks;
     }
     @Override
@@ -42,7 +42,7 @@ public class BookKepping extends RecyclerView.Adapter<BookKepping.ViewHolder>{
             @Override
             public void onClick(View v) {
                 int position=holder.getAdapterPosition();
-                AccountBook accountBook=mAccountBook.get(position);
+                AccountBookClass accountBook=mAccountBook.get(position);
                 String m="";
 
 
@@ -81,7 +81,7 @@ public class BookKepping extends RecyclerView.Adapter<BookKepping.ViewHolder>{
     }
     @Override
     public  void onBindViewHolder(ViewHolder holder,int position){
-        AccountBook accountBook=mAccountBook.get(position);
+        AccountBookClass accountBook=mAccountBook.get(position);
         holder.brief_display.setText(accountBook.getBrief());
     }
     @Override

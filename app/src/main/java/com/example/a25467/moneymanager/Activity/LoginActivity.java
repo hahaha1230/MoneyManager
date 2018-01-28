@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.example.a25467.moneymanager.R;
 
-public class Login extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 //public static final EditText pwd;
 public int date;
     @Override
@@ -40,11 +40,11 @@ public int date;
             @Override
             public void onClick(View v) {
                 if ("sa".equals(account.getText().toString()) &&"sa".equals(pwd.getText().toString())){
-                    Intent intent=new Intent(Login.this,MainInterface.class);
+                    Intent intent=new Intent(LoginActivity.this,MainInterfaceActivity.class);
                     startActivity(intent);
                 }
                 else {
-                    Toast.makeText(Login.this,"您输入的账号或密码有误，请重新输入"
+                    Toast.makeText(LoginActivity.this,"您输入的账号或密码有误，请重新输入"
                             ,Toast.LENGTH_SHORT).show();
                     pwd.setText(null);
                     account.setText(null);

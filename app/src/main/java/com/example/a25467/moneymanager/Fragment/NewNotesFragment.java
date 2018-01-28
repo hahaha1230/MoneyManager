@@ -12,10 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.a25467.moneymanager.Adapter.Notes;
-import com.example.a25467.moneymanager.Activity.NewNote;
+import com.example.a25467.moneymanager.Adapter.NotesAdapter;
+import com.example.a25467.moneymanager.Activity.NewNoteActivity;
+import com.example.a25467.moneymanager.Class.NotesssClass;
 import com.example.a25467.moneymanager.Datatable.Notes_Data_table;
-import com.example.a25467.moneymanager.Class.Notesss;
 import com.example.a25467.moneymanager.R;
 
 import org.litepal.crud.DataSupport;
@@ -27,17 +27,17 @@ import java.util.List;
  * Created by 25467 on 2018/1/21.
  */
 
-public class NewNotes extends Fragment {
+public class NewNotesFragment extends Fragment {
 
 
 
-    private List<Notesss> notesList=new ArrayList<>();
+    private List<NotesssClass> notesList=new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
 
 
 
 
-    public NewNotes(){
+    public NewNotesFragment(){
 
     }
     @Override
@@ -62,7 +62,7 @@ public class NewNotes extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    Intent intent=new Intent(getActivity(),NewNote.class);
+                    Intent intent=new Intent(getActivity(),NewNoteActivity.class);
                     startActivity(intent);
             }
         });
@@ -77,7 +77,7 @@ public class NewNotes extends Fragment {
        RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list);
        LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
        recyclerView.setLayoutManager(layoutManager);
-       Notes adapter=new Notes(notesList);
+       NotesAdapter adapter=new NotesAdapter(notesList);
        recyclerView.setAdapter(adapter);
 
 
@@ -93,7 +93,7 @@ public class NewNotes extends Fragment {
             m=nn.getContent();
             n=String.valueOf(nn.getDate());
             long i=nn.getCreate_time();
-            Notesss notes=new Notesss(m,n,i);
+            NotesssClass notes=new NotesssClass(m,n,i);
             notesList.add(notes);
 
         }
@@ -102,7 +102,7 @@ public class NewNotes extends Fragment {
             m=nn.getContent();
             n=nn.getDate();
 
-            Notesss notes=new Notesss(m,n);
+            NotesssClass notes=new NotesssClass(m,n);
             notesList.add(notes);
         }*/
        /* for (BookKepping_Data_Table bb:bookKepping_data_tables){
@@ -110,7 +110,7 @@ public class NewNotes extends Fragment {
             n=bb.getWhere();
             Log.d("hhh",m);
             Log.d("hhh",n);
-            Notesss notes=new Notesss(m,n);
+            NotesssClass notes=new NotesssClass(m,n);
             notesList.add(notes);
         }
 
@@ -130,7 +130,7 @@ public class NewNotes extends Fragment {
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        Notes adapter=new Notes(notesList);
+        NotesAdapter adapter=new NotesAdapter(notesList);
         recyclerView.setAdapter(adapter);
         Toast.makeText(getContext(),"刷新成功！",Toast.LENGTH_SHORT).show();
         swipeRefreshLayout.setRefreshing(false);

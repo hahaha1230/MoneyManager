@@ -6,11 +6,11 @@ import org.litepal.crud.DataSupport;
  * Created by 25467 on 2018/1/22.
  */
 
-public class Notesss {
+public class NotesssClass {
     private String notes;
     private String date;
     private long create_time;
-    public Notesss(String notes, String date ,long create_time){
+    public NotesssClass(String notes, String date , long create_time){
         this.date=date;
         this.notes=notes;
         this.create_time=create_time;

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.a25467.moneymanager.Datatable.Notes_Data_table;
-import com.example.a25467.moneymanager.Class.Notesss;
+import com.example.a25467.moneymanager.Class.NotesssClass;
 import com.example.a25467.moneymanager.R;
 
 import org.litepal.crud.DataSupport;
@@ -20,8 +20,8 @@ import java.util.List;
  * Created by 25467 on 2018/1/22.
  */
 
-public class Notes extends RecyclerView.Adapter <Notes.ViewHolder>{
-    private List <Notesss> mNotes;
+public class NotesAdapter extends RecyclerView.Adapter <NotesAdapter.ViewHolder>{
+    private List <NotesssClass> mNotes;
     static class ViewHolder extends RecyclerView.ViewHolder{
         View notesView;
         TextView notes_display;
@@ -33,7 +33,7 @@ public class Notes extends RecyclerView.Adapter <Notes.ViewHolder>{
             date_display=(TextView)view.findViewById(R.id.date_display);
         }
     }
-    public Notes(List <Notesss> notes){
+    public NotesAdapter(List <NotesssClass> notes){
         mNotes=notes;
     }
     @Override
@@ -45,7 +45,7 @@ public class Notes extends RecyclerView.Adapter <Notes.ViewHolder>{
             public void onClick(View v) {
 
                 int position=holder.getAdapterPosition();
-                Notesss notesss=mNotes.get(position);
+                NotesssClass notesss=mNotes.get(position);
                 String m="";
 
 
@@ -72,7 +72,7 @@ public class Notes extends RecyclerView.Adapter <Notes.ViewHolder>{
     }
     @Override
     public void onBindViewHolder(ViewHolder holder,int position){
-        Notesss notes=mNotes.get(position);
+        NotesssClass notes=mNotes.get(position);
         holder.notes_display.setText(notes.getNotes());
         holder.date_display.setText(notes.getDate());
     }

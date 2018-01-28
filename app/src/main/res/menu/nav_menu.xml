@@ -12,9 +12,13 @@
             android:icon="@mipmap/hhh"
             android:title="性别"/>
         <item
-            android:id="@+id/mail"
-            android:icon="@mipmap/hhh"
-            android:title="邮箱"/>
+            android:id="@+id/setting"
+            android:icon="@drawable/setting"
+            android:title="设置"/>
+        <item
+            android:id="@+id/share"
+            android:icon="@drawable/share"
+            android:title="分享"></item>
     </group>
 
 </menu>
