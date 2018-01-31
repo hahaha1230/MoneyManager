@@ -36,9 +36,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a25467.moneymanager.Datatable.InformationDataTable;
 import com.example.a25467.moneymanager.Fragment.BookKeepingFragment;
 import com.example.a25467.moneymanager.Fragment.NewNotesFragment;
 import com.example.a25467.moneymanager.R;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +64,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
     private  static  final int CHOOSE_PHOTO=2;
     public File outputImage;
     public  View headerview;
+    private TextView username;
 
 
     // private CircleImageView circleImageView;
@@ -74,11 +78,16 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //getSupportActionBar().hide();
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_maininterface);
         Toolbar toolbar=(Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mDrawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+        headerview = navigationView.inflateHeaderView(R.layout.nav_header);
+        username=(TextView)headerview.findViewById(R.id.username);
+        //显示用户名
+        InformationDataTable informationDataTable=new InformationDataTable();
+
       //  NavigationView navView=(NavigationView)findViewById(R.id.nav_view);
         ActionBar actionBar=getSupportActionBar();
         if (actionBar !=null){
@@ -87,10 +96,11 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
         }
 
 
-        navigationView.setCheckedItem(R.id.nav_name);//设置默认为姓名
+        navigationView.setCheckedItem(R.id.setting);//设置默认为设置
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                //分享应用
                 if (item.getItemId()==R.id.share){
                     Intent intent=new Intent(Intent.ACTION_SEND);
                     intent.setType("image/*");
@@ -100,6 +110,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
                     startActivity(Intent.createChooser(intent,getTitle()));
                     //Toast.makeText(MainInterfaceActivity.this,"hhhhh",Toast.LENGTH_SHORT).show();
                 }
+                //设置
                 else if (item.getItemId()==R.id.setting){
                     Intent intent=new Intent(MainInterfaceActivity.this,SettingActivity.class);
                     startActivity(intent);
@@ -109,8 +120,9 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
         });
 
         //若点击头像，则弹出对话框让用户选择拍照或从手机图库中选择
-        headerview = navigationView.inflateHeaderView(R.layout.nav_header);
         picture=(ImageView)headerview.findViewById(R.id.icon_image);
+
+
         picture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +130,15 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+        //若个人信息数据表中无记录，则创建一条
+        List<InformationDataTable>informationDataTables= DataSupport.findAll(InformationDataTable.class);
+        if (informationDataTables.isEmpty()){
+            informationDataTable.setName("李华");
+            informationDataTable.setSex("男");
+            informationDataTable.setBudget_Pay(5000.00);
+            informationDataTable.setBudget_Income(10000.00);
+            informationDataTable.save();
+        }
 
 
 
@@ -184,17 +205,12 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v){
 
-
         switch (v.getId()){
             case R.id.item_notes:
                 vp.setCurrentItem(0,true);
-                change=4;
                 break;
             case R.id.item_Book_Keepping:
                 vp.setCurrentItem(1,true);
-                change=1;
-                break;
-            case R.id.icon_image:
                 break;
 
             default:
@@ -208,6 +224,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
             case 0:
                  outputImage=new File(getExternalCacheDir(),"output_image.jpg");
                 try{
+                    //如果已经存在了拍照的照片，则删除照片
                     if (outputImage.exists()){
                         outputImage.delete();
                     }
@@ -244,6 +261,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
 
         return true;
     }
+    //打开相册
     private void  openAlbum(){
         Intent intent=new Intent("android.intent.action.GET_CONTENT");
         intent.setType("image/*");
@@ -311,24 +329,24 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
         Uri uri=data.getData();
         if (DocumentsContract.isDocumentUri(this,uri)){
             //如果是document类型的URI，则通过document id处理
-            Log.d("hhh","111");
+            //Log.d("hhh","111");
             String docID=DocumentsContract.getDocumentId(uri);
             if ("com.android.providers.media.documents".equals(uri.getAuthority())){
                 String id=docID.split(":")[1];//解析出数字格式ID
                 String selection=MediaStore.Images.Media._ID+"="+id;
                 imagePath=getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,selection);
-                Log.d("hhh","112");
+                //Log.d("hhh","112");
             }else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())){
                 Uri contentUri= ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
                         Long.valueOf(docID));
                 imagePath=getImagePath(contentUri,null);
-                Log.d("hhh","113");
+               // Log.d("hhh","113");
             }
         }
         else if ("content".equalsIgnoreCase(uri.getScheme())){
             //如果是content类型的URI，则使用普通方式处理
             imagePath=getImagePath(uri,null);
-            Log.d("hhh","114");
+           // Log.d("hhh","114");
         }
         else if ("file".equalsIgnoreCase(uri.getScheme())){
             //如果是file类型的uri，直接获取图片路径即可
@@ -355,6 +373,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
         }
         return path;
     }
+    //显示照片
     private void displayImage(String imagePath){
         Log.d("hhh","117");
         if (imagePath !=null){

@@ -50,6 +50,7 @@ public class BookKeppingAdapter extends RecyclerView.Adapter<BookKeppingAdapter.
                 List<BookKepping_Data_Table>bookKepping_data_tables= DataSupport.where("create_time=?"
                 ,String.valueOf(accountBook.getCreate_time())).find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table bookKepping_data_table:bookKepping_data_tables){
+                    //若为支出界面，则用dialog显示支出信息
                     if (bookKepping_data_table.getCategory()==1){
                         m="您于"+String.valueOf(bookKepping_data_table.getDate())+"使用" +
                                 bookKepping_data_table.getAccount()+"账户花费了"+
@@ -57,6 +58,7 @@ public class BookKeppingAdapter extends RecyclerView.Adapter<BookKeppingAdapter.
                                 bookKepping_data_table.getSource_or_purpose()+";        备注为:"+
                                bookKepping_data_table.getNotes();
                     }
+                    //若为收入界面，则用dialog显示收入信息
                     else {
                         m="您于"+String.valueOf(bookKepping_data_table.getDate())+"使用" +
                                 bookKepping_data_table.getAccount()+"账户收入了"+

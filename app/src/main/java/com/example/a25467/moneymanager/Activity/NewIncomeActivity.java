@@ -29,7 +29,7 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_income);
+        setContentView(R.layout.activity_new_income);
         choose_Account=(Button)findViewById(R.id.choose_Account);
         choose_date=(Button)findViewById(R.id.choosedate1);
         sure_income=(Button)findViewById(R.id.sure_income);
@@ -66,6 +66,7 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
                 String m="";
                 try {
 
+                    //截取字符串中的数字
                     String str=dateDisplay.getText().toString();
                     str.trim();
                     String str2="";
@@ -76,6 +77,7 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
                             }
                         }
                     }
+                    //保存数据
                     BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
                     bookKepping_data_table.setNotes(notes1.getText().toString());
                     bookKepping_data_table.setSource_or_purpose(category.getText().toString());
@@ -154,9 +156,26 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
         }
         return null;
     }
+    //若为单位数的日期则在前面补一个0并显示日期
     public void display(){
-        dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).append("月").append(mDay)
-                .append("日"));
+        if (mMonth<10&&mDay<10){
+
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth+1).
+                    append("月").append("0").append(mDay).append("日"));
+        }
+        else  if (mMonth>=10&&mDay<10){
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).
+                    append("月").append("0").append(mDay).append("日"));
+        }
+
+        else if (mMonth<10&&mDay>=10) {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).
+                    append("月").append(mDay).append("日"));
+        }
+        else {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth + 1).
+                    append("月").append(mDay).append("日"));
+        }
     }
     private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
         @Override

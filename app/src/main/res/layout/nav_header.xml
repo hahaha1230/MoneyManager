@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="180dp"
+    android:layout_height="160dp"
     android:padding="10dp"
     android:background="?attr/colorPrimary"
     >
@@ -16,15 +16,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/mail"
-        android:layout_alignParentBottom="true"
-        android:text="tonygreedev@gmail.com"
-        android:textSize="14sp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:id="@+id/username"
-        android:text="tony green"
+        android:text="李华"
         android:textColor="#FFF"
         android:textSize="14sp"/>
 

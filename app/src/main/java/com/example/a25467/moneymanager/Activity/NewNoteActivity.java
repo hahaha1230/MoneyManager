@@ -52,6 +52,7 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
                 break;
             case R.id.notes_sure:
 
+                //提取出来时间数字
                 String str= null;
                 String m="";
                 try {
@@ -65,6 +66,7 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
                             }
                         }
                     }
+                    //保存数据
                     Notes_Data_table notes_data_table=new Notes_Data_table();
                     notes_data_table.setContent(contents.getText().toString());
                     notes_data_table.setDate(Long.parseLong(str2));
@@ -98,8 +100,24 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
         return null;
     }
     public void display(){
-        dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).append("月").append(mDay)
-                .append("日"));
+        if (mMonth<10&&mDay<10){
+
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth+1).
+                    append("月").append("0").append(mDay).append("日"));
+        }
+        else  if (mMonth>=10&&mDay<10){
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).
+                    append("月").append("0").append(mDay).append("日"));
+        }
+
+        else if (mMonth<10&&mDay>=10) {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).
+                    append("月").append(mDay).append("日"));
+        }
+        else {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth + 1).
+                    append("月").append(mDay).append("日"));
+        }
     }
     private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
         @Override

@@ -16,7 +16,7 @@ public int date;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         Button login=findViewById(R.id.login);
         final EditText account=findViewById(R.id.account);
         final EditText pwd=findViewById(R.id.pwd);

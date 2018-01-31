@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -20,12 +22,15 @@ import com.example.a25467.moneymanager.Activity.NewIncomeActivity;
 import com.example.a25467.moneymanager.Activity.NewPayActivity;
 import com.example.a25467.moneymanager.Adapter.BookKeppingAdapter;
 import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
+import com.example.a25467.moneymanager.Datatable.InformationDataTable;
 import com.example.a25467.moneymanager.R;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by 25467 on 2018/1/21.
@@ -37,6 +42,9 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
 
     private List<AccountBookClass>accountBookList=new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private NavigationView navigationView;
+    public  View headerview;
+    private TextView username;
 
     public BookKeepingFragment(){
 
@@ -58,6 +66,7 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
         b.setOnClickListener(this);
         c.setOnClickListener(this);
         //jia1.setOnClickListener(this);
+        navigationView = (NavigationView)getActivity(). findViewById(R.id.nav_view);
 
 
         swipeRefreshLayout=(SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_refresh1);
@@ -90,9 +99,6 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
 
 
                 }
-
-
-
 
             }
         });
@@ -175,6 +181,55 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
                 break;
             case 3:
                 int pay=0,income=0,sum=0;
+                Calendar cal;
+                String year;
+                String month;
+                String mytime1;
+
+                cal=Calendar.getInstance();
+                cal.setTimeZone(TimeZone.getTimeZone("GTM+8.00"));//设置时区
+                year=String.valueOf(cal.get(Calendar.YEAR));
+                month=String.valueOf(cal.get(Calendar.MONTH))+1;
+                mytime1=year+month;
+
+                Long m=Long.valueOf(mytime1)*100;//年+月+00（00代表00天）,用于做本月最小天
+                Long n=Long.valueOf(mytime1)*100+32;//年+月+00（32代表32天），用于做本月最大天
+                int all_income=0,all_pay=0;
+                Double budget_income,budget_pay;
+                //获取本月的总支出
+                List<BookKepping_Data_Table>ees=DataSupport.where("date>? and date< ? and category=?",
+                        String.valueOf(m),String.valueOf(n),"1").find(BookKepping_Data_Table.class);
+                for (BookKepping_Data_Table bookKepping_data_table:ees){
+                    all_pay +=bookKepping_data_table.getMoney();
+                }
+               // 获取本月的总收入
+                List<BookKepping_Data_Table>ffs=DataSupport.where("date>? and date< ? and category=?",
+                        String.valueOf(m),String.valueOf(n),"2").find(BookKepping_Data_Table.class);
+                for (BookKepping_Data_Table bookKepping_data_table:ffs){
+                    all_income +=bookKepping_data_table.getMoney();
+                }
+                //获取本月的预算收入与预算支出
+                InformationDataTable informationDataTable=DataSupport.findFirst(InformationDataTable.class);
+                budget_income=informationDataTable.getBudget_Income();
+                budget_pay=informationDataTable.getBudget_Pay();
+                //计算总收入、总支出与预算收入、预算支出的差额
+                Double diff_pay=Double.valueOf(all_pay)-budget_pay;
+                Double diff_income=Double.valueOf(all_income)-budget_income;
+                //显示出来
+
+                AccountBookClass accountBook1=new AccountBookClass("您本月一共花费了"+String.valueOf(all_pay)+"元，比预期花费"
+                       +String.valueOf(budget_pay)+"多了"+String.valueOf(diff_pay)+
+                                "元。收入了"+String.valueOf(all_income)+"元，比预期收入"+String.valueOf(budget_income)
+                        +"多了"+String.valueOf(diff_income)+"元。",
+
+                        System.currentTimeMillis());
+                accountBookList.add(accountBook1);
+
+
+
+
+
+
                 List<BookKepping_Data_Table>ccs= DataSupport.where("category=?","1")
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table cc:ccs){
@@ -197,6 +252,7 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
 
 
     }
+    //改变字体的颜色
     private void changetextcolor(){
         if (change==1){
             a.setTextColor(Color.parseColor("#66CDAA"));
@@ -217,6 +273,14 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
     }
     //下拉刷新，重新从数据库中获取信息
     private void refresh(){
+
+        headerview = navigationView.getHeaderView(0);
+        username=(TextView)headerview.findViewById(R.id.username);
+
+        List<InformationDataTable> informationDataTables=DataSupport.findAll(InformationDataTable.class);
+        for (InformationDataTable informationDataTable:informationDataTables){
+            username.setText("欢迎："+informationDataTable.getName());
+        }
         initAccountBook();
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list1);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());

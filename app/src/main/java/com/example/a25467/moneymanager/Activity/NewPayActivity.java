@@ -30,7 +30,7 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pay);
+        setContentView(R.layout.activity_new_pay);
         choose_date = (Button)findViewById(R.id.choose_date);
         dateDisplay = (TextView) findViewById(R.id.dateDisplay);
         choose_Account = (Button)findViewById(R.id.choose_Account);
@@ -159,11 +159,31 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
         }
         return null;
     }
+    //日期若为单数则在前面补一个0并显示日期
     public void display(){
         /*dateDisplay.setText(new StringBuffer().append(mMonth+1).append("-").append(mDay).append("-")
                 .append(mYear).append(" "));*/
-        dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).append("月").append(mDay)
-        .append("日"));
+        if (mMonth<10&&mDay<10){
+
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth+1).
+                        append("月").append("0").append(mDay).append("日"));
+        }
+            else  if (mMonth>=10&&mDay<10){
+                dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).
+                        append("月").append("0").append(mDay).append("日"));
+            }
+
+        else if (mMonth<10&&mDay>=10) {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).
+                    append("月").append(mDay).append("日"));
+        }
+        else {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth + 1).
+                    append("月").append(mDay).append("日"));
+        }
+
+
+
     }
     private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
         @Override

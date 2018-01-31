@@ -2,19 +2,26 @@ package com.example.a25467.moneymanager.Fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.a25467.moneymanager.Adapter.NotesAdapter;
 import com.example.a25467.moneymanager.Activity.NewNoteActivity;
 import com.example.a25467.moneymanager.Class.NotesssClass;
+import com.example.a25467.moneymanager.Datatable.InformationDataTable;
 import com.example.a25467.moneymanager.Datatable.Notes_Data_table;
 import com.example.a25467.moneymanager.R;
 
@@ -33,6 +40,10 @@ public class NewNotesFragment extends Fragment {
 
     private List<NotesssClass> notesList=new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private NavigationView navigationView;
+    public  View headerview;
+    private TextView username,name,sex;
+    private Menu menu;
 
 
 
@@ -47,6 +58,21 @@ public class NewNotesFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState){
         super.onActivityCreated(savedInstanceState);
+        navigationView = (NavigationView)getActivity(). findViewById(R.id.nav_view);
+        /*navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.sex:
+                        List<InformationDataTable> informationDataTables=DataSupport.findAll(InformationDataTable.class);
+                        for (InformationDataTable informationDataTable:informationDataTables){
+                            sex.setText("性别"+informationDataTable.getSex());
+                        }
+
+                }
+                return false;
+            }
+        });*/
         //下拉刷新，重新从数据库中获取内容
         swipeRefreshLayout=(SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -124,8 +150,27 @@ public class NewNotesFragment extends Fragment {
 
         }*/
     }
+
+
+
+
+
+
     //刷新
     private void refresh(){
+
+        headerview = navigationView.getHeaderView(0);
+        username=(TextView)headerview.findViewById(R.id.username);
+
+
+
+       List<InformationDataTable> informationDataTables=DataSupport.findAll(InformationDataTable.class);
+        for (InformationDataTable informationDataTable:informationDataTables){
+            username.setText("欢迎："+informationDataTable.getName());
+        }
+
+
+
         initNotes();
         RecyclerView recyclerView=(RecyclerView)getActivity().findViewById(R.id.recy_list);
         LinearLayoutManager layoutManager=new LinearLayoutManager(getActivity());
