@@ -10,11 +10,14 @@ import android.widget.TextView;
 
 import com.example.a25467.moneymanager.Class.AccountBookClass;
 import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
+import com.example.a25467.moneymanager.Datatable.InformationDataTable;
 import com.example.a25467.moneymanager.R;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * Created by 25467 on 2018/1/23.
@@ -59,13 +62,14 @@ public class BookKeppingAdapter extends RecyclerView.Adapter<BookKeppingAdapter.
                                bookKepping_data_table.getNotes();
                     }
                     //若为收入界面，则用dialog显示收入信息
-                    else {
+                    else  if (bookKepping_data_table.getCategory()==2){
                         m="您于"+String.valueOf(bookKepping_data_table.getDate())+"使用" +
                                 bookKepping_data_table.getAccount()+"账户收入了"+
                                 bookKepping_data_table.getMoney()+"元来源于"+
                                 bookKepping_data_table.getSource_or_purpose()+";        备注为:"+
                                 bookKepping_data_table.getNotes();
                     }
+
                     dialog.setTitle("详细信息如下：");
                     dialog.setMessage(m);
                     dialog.setCancelable(false);

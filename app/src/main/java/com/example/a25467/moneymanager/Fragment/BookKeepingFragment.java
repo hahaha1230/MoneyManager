@@ -212,39 +212,34 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
                 InformationDataTable informationDataTable=DataSupport.findFirst(InformationDataTable.class);
                 budget_income=informationDataTable.getBudget_Income();
                 budget_pay=informationDataTable.getBudget_Pay();
-                //计算总收入、总支出与预算收入、预算支出的差额
+                //计算本月总收入、本月总支出与预算收入、预算支出的差额
                 Double diff_pay=Double.valueOf(all_pay)-budget_pay;
                 Double diff_income=Double.valueOf(all_income)-budget_income;
-                //显示出来
 
-                AccountBookClass accountBook1=new AccountBookClass("您本月一共花费了"+String.valueOf(all_pay)+"元，比预期花费"
-                       +String.valueOf(budget_pay)+"多了"+String.valueOf(diff_pay)+
-                                "元。收入了"+String.valueOf(all_income)+"元，比预期收入"+String.valueOf(budget_income)
-                        +"多了"+String.valueOf(diff_income)+"元。",
-
-                        System.currentTimeMillis());
-                accountBookList.add(accountBook1);
-
-
-
-
-
-
+                //获取总支出
                 List<BookKepping_Data_Table>ccs= DataSupport.where("category=?","1")
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table cc:ccs){
                     pay+=cc.getMoney();
                 }
+                //获取总收入
                 List<BookKepping_Data_Table>dds= DataSupport.where("category=?","2")
                         .find(BookKepping_Data_Table.class);
                 for (BookKepping_Data_Table dd:dds){
                     income+=dd.getMoney();
                 }
+                //计算总收入
                 sum=income-pay;
-                AccountBookClass accountBook=new AccountBookClass("您一共花费了"+String.valueOf(pay)+"元，"
+                //显示出来
+
+                AccountBookClass accountBook1=new AccountBookClass("您本月一共花费了"+String.valueOf(all_pay)+
+                        "元，比本月预期花费"
+                       +String.valueOf(budget_pay)+"多了"+String.valueOf(diff_pay)+
+                                "元。收入了"+String.valueOf(all_income)+"元，比本月预期收入"+String.valueOf(budget_income)
+                        +"多了"+String.valueOf(diff_income)+"元。"+"您一共花费了"+String.valueOf(pay)+"元，"
                         +"收入了"+String.valueOf(income)+"元。总收入为"+String.valueOf(sum)+"元",
                         System.currentTimeMillis());
-                accountBookList.add(accountBook);
+                accountBookList.add(accountBook1);
                 break;
             default:
                 break;

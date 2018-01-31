@@ -19,7 +19,7 @@ import com.example.a25467.moneymanager.R;
 import java.util.Calendar;
 
 public class NewPayActivity extends Activity implements View.OnClickListener{
-    Button choose_Account, choose_date, sure_pay, quit_pay,notes_sure,notes_quit;
+    Button choose_Account, choose_date, sure_pay, quit_pay;
     TextView sure_Account;
     TextView dateDisplay;
     EditText num, purpose, notes1;
@@ -83,7 +83,7 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
                     bookKepping_data_table = new BookKepping_Data_Table();
                     bookKepping_data_table.setCategory(1);
                     bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
-                    bookKepping_data_table.setAccount(choose_Account.getText().toString());
+                    bookKepping_data_table.setAccount(sure_Account.getText().toString());
                     bookKepping_data_table.setDate(Long.parseLong(str2));
                     bookKepping_data_table.setSource_or_purpose(purpose.getText().toString());
                     bookKepping_data_table.setNotes(notes1.getText().toString());
