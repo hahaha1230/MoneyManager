@@ -13,6 +13,7 @@ import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import com.example.a25467.moneymanager.Datatable.InformationDataTable;
 import com.example.a25467.moneymanager.Fragment.BookKeepingFragment;
@@ -67,6 +69,8 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
     private TextView username;
 
 
+
+
     // private CircleImageView circleImageView;
 
 
@@ -94,6 +98,14 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.category);
         }
+        final FloatingActionButton map=(FloatingActionButton) findViewById(R.id.map);
+        map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainInterfaceActivity.this,MapActivity1.class);
+                startActivity(intent);
+            }
+        });
 
 
         navigationView.setCheckedItem(R.id.setting);//设置默认为设置

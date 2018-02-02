@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -189,13 +190,21 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
                 cal=Calendar.getInstance();
                 cal.setTimeZone(TimeZone.getTimeZone("GTM+8.00"));//设置时区
                 year=String.valueOf(cal.get(Calendar.YEAR));
-                month=String.valueOf(cal.get(Calendar.MONTH))+1;
+                month=String.valueOf(cal.get(Calendar.MONTH)+1);
+                if (Double.valueOf(month)<10){
+                    month=0+month;
+                }
                 mytime1=year+month;
+                Log.d("hhh",mytime1);
+                Toast.makeText(getContext(), String.valueOf(mytime1),Toast.LENGTH_SHORT).show();
 
                 Long m=Long.valueOf(mytime1)*100;//年+月+00（00代表00天）,用于做本月最小天
                 Long n=Long.valueOf(mytime1)*100+32;//年+月+00（32代表32天），用于做本月最大天
                 int all_income=0,all_pay=0;
                 Double budget_income,budget_pay;
+                Log.d("hhh",String.valueOf(m));
+
+
                 //获取本月的总支出
                 List<BookKepping_Data_Table>ees=DataSupport.where("date>? and date< ? and category=?",
                         String.valueOf(m),String.valueOf(n),"1").find(BookKepping_Data_Table.class);
