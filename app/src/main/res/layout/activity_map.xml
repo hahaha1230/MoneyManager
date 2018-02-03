@@ -4,7 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.a25467.moneymanager.Activity.MapActivity">
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/locationDisplay"/>
   <com.amap.api.maps.MapView
 
       android:id="@+id/map"

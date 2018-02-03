@@ -80,6 +80,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     informationDataTable.setBudget_Pay(Double.valueOf(budget_Pay.getText().toString()));
                     informationDataTable.updateAll();
                     information="信息修改成功！";
+                    finish();
 
 
                 }

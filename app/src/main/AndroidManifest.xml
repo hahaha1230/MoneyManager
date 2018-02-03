@@ -37,9 +37,9 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="a835c09cc073b1d820eb6ca5624909f9"></meta-data>
+            android:value="a835c09cc073b1d820eb6ca5624909f9" />
 
-        <service android:name="com.amap.api.location.APSService"></service>
+        <service android:name="com.amap.api.location.APSService" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -66,10 +66,8 @@
 
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".Activity.MapActivity"></activity>
-        <activity android:name=".Activity.MapActivity1">
-
-        </activity>
+        <activity android:name=".Activity.MapActivity" />
+        <activity android:name=".Activity.MapActivity1"></activity>
     </application>
 
 </manifest>

@@ -88,6 +88,7 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
                     bookKepping_data_table.setCreate_time(System.currentTimeMillis());
                     bookKepping_data_table.save();
                     m="您的新的收入信息已经保存!";
+                    finish();
 
                 } catch (NumberFormatException e) {
                     e.printStackTrace();

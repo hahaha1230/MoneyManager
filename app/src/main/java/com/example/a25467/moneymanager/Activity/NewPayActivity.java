@@ -90,6 +90,7 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
                     bookKepping_data_table.setCreate_time(System.currentTimeMillis());
                     bookKepping_data_table.save();
                     information="您的新的支出信息已保存";
+                    finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                     information="您输入的信息有误，请重新输入！";

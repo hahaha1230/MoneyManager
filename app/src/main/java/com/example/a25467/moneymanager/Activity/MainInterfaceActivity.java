@@ -102,7 +102,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
         map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainInterfaceActivity.this,MapActivity1.class);
+                Intent intent=new Intent(MainInterfaceActivity.this,MapActivity.class);
                 startActivity(intent);
             }
         });

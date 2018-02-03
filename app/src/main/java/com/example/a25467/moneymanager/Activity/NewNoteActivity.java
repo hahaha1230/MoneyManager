@@ -73,6 +73,7 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
                     notes_data_table.setCreate_time(System.currentTimeMillis());
                     notes_data_table.save();
                     m="保存成功！";
+                    finish();
                     break;
                 } catch (Exception e) {
                     e.printStackTrace();
