@@ -98,14 +98,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setHomeAsUpIndicator(R.drawable.category);
         }
-        final FloatingActionButton map=(FloatingActionButton) findViewById(R.id.map);
-        map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(MainInterfaceActivity.this,MapActivity.class);
-                startActivity(intent);
-            }
-        });
+
 
 
         navigationView.setCheckedItem(R.id.setting);//设置默认为设置

@@ -59,7 +59,7 @@ public class BookKeppingAdapter extends RecyclerView.Adapter<BookKeppingAdapter.
                                 bookKepping_data_table.getAccount()+"账户花费了"+
                                 bookKepping_data_table.getMoney()+"元用于"+
                                 bookKepping_data_table.getSource_or_purpose()+";        备注为:"+
-                               bookKepping_data_table.getNotes();
+                               bookKepping_data_table.getNotes()+"      地点为："+bookKepping_data_table.getLocate();
                     }
                     //若为收入界面，则用dialog显示收入信息
                     else  if (bookKepping_data_table.getCategory()==2){
@@ -67,7 +67,7 @@ public class BookKeppingAdapter extends RecyclerView.Adapter<BookKeppingAdapter.
                                 bookKepping_data_table.getAccount()+"账户收入了"+
                                 bookKepping_data_table.getMoney()+"元来源于"+
                                 bookKepping_data_table.getSource_or_purpose()+";        备注为:"+
-                                bookKepping_data_table.getNotes();
+                                bookKepping_data_table.getNotes()+"      地点为："+bookKepping_data_table.getLocate();
                     }
 
                     dialog.setTitle("详细信息如下：");

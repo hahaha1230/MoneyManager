@@ -53,7 +53,8 @@ public class NotesAdapter extends RecyclerView.Adapter <NotesAdapter.ViewHolder>
                 List<Notes_Data_table>notes_data_tables= DataSupport.where("create_time=?",
                        String.valueOf(notesss.getCreate_time())).find(Notes_Data_table.class);
                 for (Notes_Data_table notes_data_table:notes_data_tables){
-                    m="时间为:"+String.valueOf(notes_data_table.getDate())+"        "+"内容为："+notes_data_table.getContent();
+                    m="时间为:"+String.valueOf(notes_data_table.getDate())+"        "+"内容为："+notes_data_table.getContent()
+                    +"      地点为:"+notes_data_table.getLocate();
                 }
 
                 dialog.setTitle("详细信息如下：");

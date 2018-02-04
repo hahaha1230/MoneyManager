@@ -14,6 +14,15 @@ public class BookKepping_Data_Table extends DataSupport {
    private int category;
    private String source_or_purpose;
    private long create_time;
+   private String locate;
+
+    public String getLocate() {
+        return locate;
+    }
+
+    public void setLocate(String locate) {
+        this.locate = locate;
+    }
 
     public long getCreate_time() {
         return create_time;

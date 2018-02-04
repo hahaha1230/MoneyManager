@@ -3,6 +3,7 @@ package com.example.a25467.moneymanager.Activity;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -19,8 +20,8 @@ import com.example.a25467.moneymanager.R;
 import java.util.Calendar;
 
 public class NewPayActivity extends Activity implements View.OnClickListener{
-    Button choose_Account, choose_date, sure_pay, quit_pay;
-    TextView sure_Account;
+    Button choose_Account, choose_date, sure_pay, quit_pay,chooseLocate;
+    TextView sure_Account,locateDisplay;
     TextView dateDisplay;
     EditText num, purpose, notes1;
     int mYear,mMonth,mDay;
@@ -36,16 +37,19 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
         choose_Account = (Button)findViewById(R.id.choose_Account);
         sure_Account = (TextView)findViewById(R.id.sure_Account);
         choose_date = (Button) findViewById(R.id.choosedate1);
+        chooseLocate=(Button)findViewById(R.id.choose_location);
         num = (EditText) findViewById(R.id.num);
         purpose = (EditText)findViewById(R.id.purpose);
         notes1 = (EditText) findViewById(R.id.notes1);
         sure_pay = (Button) findViewById(R.id.sure_pay);
         quit_pay = (Button) findViewById(R.id.quit_pay);
         dateDisplay = (TextView) findViewById(R.id.dateDisplay1);
+        locateDisplay=(TextView)findViewById(R.id.locationDisplay);
         choose_Account.setOnClickListener(this);
         choose_date.setOnClickListener(this);
         sure_pay.setOnClickListener(this);
         quit_pay.setOnClickListener(this);
+        chooseLocate.setOnClickListener(this);
 
         final  Calendar ca= Calendar.getInstance();
         mYear=ca.get(Calendar.YEAR);
@@ -67,6 +71,10 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
             case R.id.choose_Account:
                 choose_Account.showContextMenu();
                 break;
+            case R.id.choose_location:
+                Intent intent=new Intent(NewPayActivity.this,MapActivity.class);
+                startActivityForResult(intent,2);
+                break;
             case R.id.sure_pay:
                 try {
                     String str=dateDisplay.getText().toString();
@@ -85,6 +93,7 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
                     bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
                     bookKepping_data_table.setAccount(sure_Account.getText().toString());
                     bookKepping_data_table.setDate(Long.parseLong(str2));
+                    bookKepping_data_table.setLocate(locateDisplay.getText().toString());
                     bookKepping_data_table.setSource_or_purpose(purpose.getText().toString());
                     bookKepping_data_table.setNotes(notes1.getText().toString());
                     bookKepping_data_table.setCreate_time(System.currentTimeMillis());
@@ -122,6 +131,19 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
             }
 
         });
+    }
+    @Override
+    protected void  onActivityResult(int requestCode,int resultCode,Intent data){
+
+        switch (requestCode){
+            case 2:
+                if (resultCode==RESULT_OK){
+                    locateDisplay.setText(data.getExtras().getString("result"));
+                }
+                break;
+            default:
+                break;
+        }
     }
     @Override
     public boolean onContextItemSelected(MenuItem item){

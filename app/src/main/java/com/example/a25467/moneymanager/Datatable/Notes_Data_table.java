@@ -10,6 +10,15 @@ public class Notes_Data_table extends DataSupport {
     private String content;
     private long date;
     private long create_time;
+    private String locate;
+
+    public String getLocate() {
+        return locate;
+    }
+
+    public void setLocate(String locate) {
+        this.locate = locate;
+    }
 
     public long getCreate_time() {
         return create_time;

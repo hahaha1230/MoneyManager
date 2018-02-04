@@ -196,7 +196,7 @@ public class BookKeepingFragment extends Fragment implements View.OnClickListene
                 }
                 mytime1=year+month;
                 Log.d("hhh",mytime1);
-                Toast.makeText(getContext(), String.valueOf(mytime1),Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), String.valueOf(mytime1),Toast.LENGTH_SHORT).show();
 
                 Long m=Long.valueOf(mytime1)*100;//年+月+00（00代表00天）,用于做本月最小天
                 Long n=Long.valueOf(mytime1)*100+32;//年+月+00（32代表32天），用于做本月最大天

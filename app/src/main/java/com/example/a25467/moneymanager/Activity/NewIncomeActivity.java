@@ -3,6 +3,7 @@ package com.example.a25467.moneymanager.Activity;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuItem;
@@ -17,9 +18,9 @@ import com.example.a25467.moneymanager.Datatable.BookKepping_Data_Table;
 import com.example.a25467.moneymanager.R;
 
 public class NewIncomeActivity extends Activity implements View.OnClickListener{
-    Button choose_Account,sure_income,quit_income;
+    Button choose_Account,sure_income,quit_income,chooseLocate;
     TextView sure_Account;
-    TextView dateDisplay;
+    TextView dateDisplay,locateDisplay;
     EditText num,category,notes1;
     int mYear,mMonth,mDay;
     Button choose_date;
@@ -36,6 +37,8 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
         quit_income=(Button)findViewById(R.id.quit_income);
         sure_Account=(TextView)findViewById(R.id.sure_Account);
         dateDisplay=(TextView)findViewById(R.id.dateDisplay1);
+        chooseLocate=(Button)findViewById(R.id.chooseLocate) ;
+        locateDisplay=(TextView)findViewById(R.id.locateDisplay);
         num=(EditText)findViewById(R.id.num);
         category=(EditText)findViewById(R.id.category);
         notes1=(EditText)findViewById(R.id.notes1);
@@ -43,6 +46,7 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
         choose_date.setOnClickListener(this);
         sure_income.setOnClickListener(this);
         quit_income.setOnClickListener(this);
+        chooseLocate.setOnClickListener(this);
 
 
 
@@ -61,8 +65,11 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
             case R.id.choose_Account:
                 choose_Account.showContextMenu();
                 break;
+            case R.id.chooseLocate:
+                Intent intent=new Intent(NewIncomeActivity.this,MapActivity.class);
+                startActivityForResult(intent,4);
+                break;
             case R.id.sure_income:
-
                 String m="";
                 try {
 
@@ -80,6 +87,7 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
                     //保存数据
                     BookKepping_Data_Table bookKepping_data_table=new BookKepping_Data_Table();
                     bookKepping_data_table.setNotes(notes1.getText().toString());
+                    bookKepping_data_table.setLocate(locateDisplay.getText().toString());
                     bookKepping_data_table.setSource_or_purpose(category.getText().toString());
                     bookKepping_data_table.setAccount(sure_Account.getText().toString());
                     bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
@@ -122,6 +130,19 @@ public class NewIncomeActivity extends Activity implements View.OnClickListener{
             }
         });
 
+    }
+    @Override
+    protected void  onActivityResult(int requestCode,int resultCode,Intent data){
+
+        switch (requestCode){
+            case 4:
+                if (resultCode==RESULT_OK){
+                    locateDisplay.setText(data.getExtras().getString("result"));
+                }
+                break;
+            default:
+                break;
+        }
     }
     @Override
     public boolean onContextItemSelected(MenuItem item){

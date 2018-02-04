@@ -3,6 +3,7 @@ package com.example.a25467.moneymanager.Activity;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,8 +19,8 @@ import java.util.Calendar;
 
 public class NewNoteActivity extends Activity implements View.OnClickListener{
     int mYear,mMonth,mDay;
-    Button choose_date,notes_sure,notes_quit;
-    TextView dateDisplay;
+    Button choose_date,notes_sure,notes_quit,chooseLocation;
+    TextView dateDisplay,locationDisplay;
     EditText contents;
     final int DATE_DIALOG=1;
 
@@ -27,15 +28,18 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_note);
+
         choose_date=(Button)findViewById(R.id.choose_date);
         notes_sure=(Button)findViewById(R.id.notes_sure);
         notes_quit=(Button)findViewById(R.id.notes_quit);
         dateDisplay=(TextView)findViewById(R.id.dateDisplay);
         contents=(EditText)findViewById(R.id.contents);
+        locationDisplay=(TextView)findViewById(R.id.locationDisplay);
+        chooseLocation=(Button)findViewById(R.id.choose_location);
+        chooseLocation.setOnClickListener(this);
         choose_date.setOnClickListener(this);
         notes_quit.setOnClickListener(this);
         notes_sure.setOnClickListener(this);
-
 
 
         final  java.util.Calendar ca=java.util.Calendar.getInstance();
@@ -70,6 +74,7 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
                     Notes_Data_table notes_data_table=new Notes_Data_table();
                     notes_data_table.setContent(contents.getText().toString());
                     notes_data_table.setDate(Long.parseLong(str2));
+                    notes_data_table.setLocate(locationDisplay.getText().toString());
                     notes_data_table.setCreate_time(System.currentTimeMillis());
                     notes_data_table.save();
                     m="保存成功！";
@@ -87,9 +92,28 @@ public class NewNoteActivity extends Activity implements View.OnClickListener{
                 contents.setText("");
                 dateDisplay.setText("");
                 break;
+            case R.id.choose_location:
+                Intent intent=new Intent(NewNoteActivity.this,MapActivity.class);
+                startActivityForResult(intent,1);
+
+
+                break;
                 default:
                     break;
 
+        }
+    }
+    @Override
+    protected void  onActivityResult(int requestCode,int resultCode,Intent data){
+
+        switch (requestCode){
+            case 1:
+                if (resultCode==RESULT_OK){
+                    locationDisplay.setText(data.getExtras().getString("result"));
+                }
+                break;
+                default:
+                    break;
         }
     }
     @Override
