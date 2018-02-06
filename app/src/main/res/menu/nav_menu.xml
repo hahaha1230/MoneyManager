@@ -11,6 +11,13 @@
             android:id="@+id/share"
             android:icon="@drawable/share"
             android:title="分享"></item>
+        <item
+            android:id="@+id/weather"
+            android:icon="@drawable/weather"
+            android:title="天气"
+            >
+
+        </item>
     </group>
 
 

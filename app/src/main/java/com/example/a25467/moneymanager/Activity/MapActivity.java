@@ -180,19 +180,16 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
         finish();
     }
     private void setUpMap(){
-        aMap.setOnMapClickListener(this);
-        aMap.setLocationSource(this);//设置定位监听
-        //蓝点初始化
-        myLocationStyle=new MyLocationStyle();//初始化定位蓝点样式类
-        //myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource())
-        myLocationStyle.interval(10000);//设置定位间隔，单位为毫秒
-        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
-        aMap.getUiSettings().setMyLocationButtonEnabled(true);//设置默认定位按钮是否显示
-        aMap.setMyLocationEnabled(true);//设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位
-        //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//只在第一次定位移动到地图中心点
-        aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+        //在子线程中执行操作
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Message message=new Message();
+                message.what=UPDATE_MAP;
+                handler.sendMessage(message);//将message对象发送出去
+            }
+        }).start();
 
-        myLocationStyle.showMyLocation(true);
 
         aMap.setOnMyLocationChangeListener(new AMap.OnMyLocationChangeListener() {
             @Override
@@ -297,6 +294,7 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
     private void changeCamera(CameraUpdate update) {
         aMap.moveCamera(update);
     }
+    //将经纬度信息转换成地点信息
     public String getAddress(double latitude,double longitude){
         Geocoder geocoder=new Geocoder(this, Locale.getDefault());
         try{
@@ -335,6 +333,31 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
         centerMarker.setPosition(latLng);
         markerList.add(centerMarker);
     }
+    public static final  int UPDATE_MAP=5;
+    private  Handler handler=new Handler(){
+        public void handleMessage(Message msg){
+            switch (msg.what){
+                case UPDATE_MAP:
+                    aMap.setOnMapClickListener(MapActivity.this);
+                    aMap.setLocationSource(MapActivity.this);//设置定位监听
+                    //蓝点初始化
+                    myLocationStyle=new MyLocationStyle();//初始化定位蓝点样式类
+                    //myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource())
+                    myLocationStyle.interval(2000);//设置定位间隔，单位为毫秒
+                    aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的style
+                    aMap.getUiSettings().setMyLocationButtonEnabled(true);//设置默认定位按钮是否显示
+                    aMap.setMyLocationEnabled(true);//设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位
+                    //myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//只在第一次定位移动到地图中心点
+                    aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+
+                    myLocationStyle.showMyLocation(true);
+                    break;
+                    default:
+                        break;
+
+            }
+        }
+    };
 
     //---定位监听---------
     /**
@@ -343,7 +366,7 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener){
         mListener=onLocationChangedListener;
-        if (mlocationClient==null){
+       if (mlocationClient==null){
             //初始化定位
             mlocationClient=new AMapLocationClient(this);
             //初始化定位参数
@@ -358,7 +381,6 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
             //注意设置合适的定位时间间隔（最小间隔为2000ms），并且在合适的时间调用stoplocation（）方法来取消定位请求
             //在单次定位的情况下，定位无论成功与否，都无需调用stoplocation（）方法移除请求，定位sdk内部会移除
             mlocationClient.startLocation();//启动定位
-
         }
 
     }
@@ -381,6 +403,7 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
     public void onLocationChanged(AMapLocation aMapLocation){
         if (mListener !=null&&aMapLocation !=null){
             if (aMapLocation !=null&& aMapLocation.getErrorCode()==0){
+
                 mListener.onLocationChanged(aMapLocation);//显示系统小蓝点
                 aMapLocation.getLocationType();//获取定位结果来源
                 aMapLocation.getLatitude();//获取纬度信息
@@ -411,7 +434,4 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
             }
         }
     }
-
-
-
 }

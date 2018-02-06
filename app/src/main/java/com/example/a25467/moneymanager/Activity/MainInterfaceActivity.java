@@ -31,6 +31,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -101,6 +102,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
 
 
 
+
         navigationView.setCheckedItem(R.id.setting);//设置默认为设置
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -119,6 +121,14 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
                 else if (item.getItemId()==R.id.setting){
                     Intent intent=new Intent(MainInterfaceActivity.this,SettingActivity.class);
                     startActivity(intent);
+                }
+                else if (item.getItemId()==R.id.weather){
+                    if(gMenuItem!=null){
+                        gMenuItem.setTitle("Changed");
+                    }
+
+                   // Intent intent=new Intent(MainInterfaceActivity.this,WeatherActivity.class);
+                    //startActivity(intent);
                 }
                 return false;
             }
@@ -185,6 +195,13 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
 
             }
         });
+    }
+   public MenuItem  gMenuItem=null;
+    @Override
+    public boolean onCreatePanelMenu(int featureId, Menu menu){
+        getMenuInflater().inflate(R.menu.nav_menu, menu);
+        gMenuItem= menu.findItem(R.id.weather);
+        return true;
     }
 
 
