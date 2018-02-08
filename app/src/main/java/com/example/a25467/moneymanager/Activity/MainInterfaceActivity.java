@@ -126,9 +126,8 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
                     if(gMenuItem!=null){
                         gMenuItem.setTitle("Changed");
                     }
-
-                   // Intent intent=new Intent(MainInterfaceActivity.this,WeatherActivity.class);
-                    //startActivity(intent);
+                    Intent intent=new Intent(MainInterfaceActivity.this,WeatherActivity.class);
+                    startActivity(intent);
                 }
                 return false;
             }

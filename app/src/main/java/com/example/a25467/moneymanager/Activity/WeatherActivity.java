@@ -1,8 +1,20 @@
 package com.example.a25467.moneymanager.Activity;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -20,8 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 
@@ -32,21 +46,47 @@ public class WeatherActivity extends AppCompatActivity {
     wind_scale1,humidity1,visibility1,quarity1,pressure1,pm2_51,pm10_1,so2_1,no2_1,co_1,o3_1,dressing1,uv_information1,
     car_washing_information1,travel_information1,flu_information1,sport_information1;
     private TextView future1,future2,future3;
+    private TextView nowLocate;
+    private LocationManager locationManager;
+    private String provider;
+    public Double latitude;
+    public Double longitude;
+    public String cityName;
+    public boolean isFirstOpen=true;
+    public String city_name;
+    public String weatherConditions;
+    public String temperature;
+    public  String feel_like;
+    public String wind_direction;
+    public String wind_speed;
+    public String wind_scale;
+    public String humidity;
+    public String visibility;
+    public String pressure;
+    public String aqi;
+    public String pm2_5;
+    public String PM10;
+    public String so2;
+    public String no2;
+    public String co;
+    public String o3;
+    public  String quality;
+    public String sunrise;
+    public  String sunset;
+    public String dressing_information;
+    public  String uv_information;
+    public String car_washing_information;
+    public String traver_information;
+    public String flu_information;
+    public String sport_information;
+    public String futureInformation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
-        //location();
-
-        initView();
-        initHandler();
-    }
-    /*public String location(Location...params){
-        OkHttpClient
-    }*/
-    private void initView(){
-        editText = findViewById(R.id.edit_text);
+        editText = (EditText) findViewById(R.id.edit_text);
+       // nowLocate=(TextView)findViewById(R.id.nowLocate);
 
         cityname=findViewById(R.id.cityname);
         time=findViewById(R.id.time);
@@ -76,6 +116,78 @@ public class WeatherActivity extends AppCompatActivity {
         flu_information1=findViewById(R.id.flu_information);
         sport_information1=findViewById(R.id.sport_information);
 
+        List<String>permissionList=new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(WeatherActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(WeatherActivity.this,Manifest.permission.ACCESS_COARSE_LOCATION)
+                !=PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (!permissionList.isEmpty()){
+            String[]permissions=permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(WeatherActivity.this,permissions,1);
+        }
+        else {
+
+        }
+        location();
+
+
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            Toast.makeText(WeatherActivity.this,"请打开GPS",Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+            dialog.setTitle("请打开GPS连接");
+            dialog.setMessage("为了能给您发送天气信息，需要先判断您的位置，请先打开GPS。");
+            dialog.setPositiveButton("设置",new android.content.DialogInterface.OnClickListener(){
+                @Override
+                public void  onClick(DialogInterface arg0,int arg1){
+                    //转到手机设置界面，用户设置GPS
+                    Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    Toast.makeText(WeatherActivity.this,"打开后直接点击返回键即可，若不打开返回下次将再次出现对话框"
+                            ,Toast.LENGTH_SHORT).show();
+
+                    //设置完成后返回原来界面
+                    startActivityForResult(intent,0);
+                }
+
+            });
+            dialog.setNeutralButton("取消",new android.content.DialogInterface.OnClickListener(){
+                @Override
+                public void  onClick(DialogInterface arg0,int arg1){
+                    arg0.dismiss();
+                }
+            });
+            dialog.show();
+
+        }
+        //获得城市名
+      try{
+          cityName=getAddress(latitude,longitude);
+    // 将城市名后面的市去掉
+       cityName=cityName.substring(0,cityName.length()-1);
+      Log.d("hhh",cityName);
+
+     }
+     catch (Exception e){
+      e.printStackTrace();
+      Toast.makeText(WeatherActivity.this,"获取失败,请走到开放地带！",Toast.LENGTH_SHORT).show();
+     }
+
+            //Log.d("hhh",String.valueOf(latitude));
+
+       // Log.d("hhh",cityName);
+
+       // nowLocate.setText("现在位于："+cityName);
+
+        if (isFirstOpen){
+            editText.setText(cityName);
+           // cityname.setText("jsjjjk");
+            deal();
+            isFirstOpen=false;
+        }
 
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,10 +195,148 @@ public class WeatherActivity extends AppCompatActivity {
                 deal();
             }
         });
+        initHandler();
     }
+    public void  location(){
+        //List<String >permission
+        //查看权限
+
+        //获取定位服务
+        locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        //获取当前可用的位置控制器
+       List<String>list=locationManager.getProviders(true);
+        //是否为GPS位置控制器
+        if (list.contains(LocationManager.GPS_PROVIDER)){
+            provider=LocationManager.GPS_PROVIDER;
+        }
+        // 是否为网络位置控制器
+        else if (list.contains(LocationManager.NETWORK_PROVIDER)){
+            provider=LocationManager.NETWORK_PROVIDER;
+        }
+        else {
+            Toast.makeText(this,"请检查网络或者GPS是否打开",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Log.d("hhh","zzzzz");
+        List<String>permissionList=new ArrayList<>();
+        if (ContextCompat.checkSelfPermission(WeatherActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        if (ContextCompat.checkSelfPermission(WeatherActivity.this,Manifest.permission.ACCESS_COARSE_LOCATION)
+                !=PackageManager.PERMISSION_GRANTED){
+            permissionList.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+        if (!permissionList.isEmpty()){
+            String[]permissions=permissionList.toArray(new String[permissionList.size()]);
+            ActivityCompat.requestPermissions(WeatherActivity.this,permissions,1);
+        }
+
+
+
+        Location location=locationManager.getLastKnownLocation(provider);
+        if (location !=null){
+            //获取当前位置
+             latitude=location.getLatitude();
+            longitude=location.getLongitude();
+            Log.d("hhh",String.valueOf(latitude));
+        }
+        else{
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000,0,locationListener);
+            Location location1=locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (location !=null){
+                latitude=location1.getLatitude();
+                longitude=location1.getLongitude();
+            }
+        }
+        /**绑定定位事件，监听位置是否改变
+         * 第一册参数为控制器类型，第二个参数为时间间隔（单位为：ms），
+         * 第三个为位置变化间隔（单位为：m），第四个参数为位置监听器
+         */
+        locationManager.requestLocationUpdates(provider,1000,2, locationListener);
+
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String[]permissions,int[]grantResults){
+        switch (requestCode){
+            case 1:
+                if (grantResults.length>0){
+                    for (int result:grantResults){
+                        if (result !=PackageManager.PERMISSION_GRANTED){
+                            Toast.makeText(this,"必须同意权限才能使用该功能",Toast.LENGTH_SHORT).show();
+                            finish();
+                            return;
+                        }
+                    }
+                }
+                else {
+                    Toast.makeText(this,"发生未知错误",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                break;
+            default:
+        }
+    }
+    //将经纬度信息转换成城市信息
+    public String getAddress(double latitude,double longitude){
+        Log.d("hhh","111");
+        Geocoder geocoder=new Geocoder(WeatherActivity.this, Locale.getDefault());
+        try{
+            Log.d("hhh","112");
+            List addresses=geocoder.getFromLocation(latitude,longitude,1);
+            if (addresses.size()>0){
+                String data=addresses.get(0).toString();
+                Log.d("hhh","113");
+                int startCity=data.indexOf("locality=")+"locality=".length();
+                int endCity=data.indexOf(",",startCity);
+                String city=data.substring(startCity,endCity);
+                Log.d("hhh",city);
+                return city;
+            }
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+        return "获取失败";
+    }
+
+        LocationListener locationListener=new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+
+    };
+
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        if (locationManager !=null){
+            locationManager.removeUpdates(locationListener);
+        }
+    }
+
     private void deal(){
         final String cityStr = editText.getText().toString();
-        if (cityStr.isEmpty()){
+        if (cityStr.isEmpty()&&(! isFirstOpen)){
             Toast.makeText(this, "请输入城市！", Toast.LENGTH_SHORT).show();
         }else{
             new Thread(new Runnable() {
@@ -102,14 +352,11 @@ public class WeatherActivity extends AppCompatActivity {
                             handler.sendEmptyMessage(2);
                         }else{
                             //result 就是返回的东西
-                           // Log.v("sunxy", "result : " + result);
                             String model= CityWeatherModel(result);
-                            //CityWeatherModel model = JsonUtils.parse(result);
                             CityWeatherModel(result);
                             if (model == null){
                                 handler.sendEmptyMessage(2);
                             }else{
-                                //CityWeatherModel(result);
                                 handler.sendEmptyMessage(0);
 
                             }
@@ -120,33 +367,6 @@ public class WeatherActivity extends AppCompatActivity {
         }
     }
 
-    public String city_name;
-    public String weatherConditions;
-    public String temperature;
-    public  String feel_like;
-    public String wind_direction;
-    public String wind_speed;
-    public String wind_scale;
-    public String humidity;
-    public String visibility;
-    public String pressure;
-    public String aqi;
-    public String pm2_5;
-    public String PM10;
-    public String so2;
-    public String no2;
-    public String co;
-    public String o3;
-    public  String quality;
-    public String sunrise;
-    public  String sunset;
-    public String dressing_information;
-    public  String uv_information;
-    public String car_washing_information;
-    public String traver_information;
-    public String flu_information;
-    public String sport_information;
-    public String futureInformation;
 
 
 
@@ -232,7 +452,7 @@ public class WeatherActivity extends AppCompatActivity {
             //未来天气状况表
             try{
                 JSONArray jsonArray1 = jsonObject.optJSONArray("future");
-                for (int i=0;i<4;i++){
+                for (int i=0;i<3;i++){
                     JSONObject jsonObject1=jsonArray1.optJSONObject(i);
                     String date=jsonObject1.optString("date");
                     String low=jsonObject1.optString("low");
@@ -242,14 +462,14 @@ public class WeatherActivity extends AppCompatActivity {
                   // String code2=jsonObject1.optString("code2");
                    String wind=jsonObject1.optString("code2");
                    if (i==1){
-                       future1.setText(date+day+"最低温"+low+"度"+"最高温"+high+"度风力"+wind+"级");
+                       future1.setText("明日"+day+"最低温"+low+"℃"+"最高温"+high+"℃风力"+wind+"级");
                    }
                    else if (i==2){
-                       future2.setText(date+day+"最低温"+low+"度"+"最高温"+high+"度风力"+wind+"级");
+                       future2.setText("后日"+day+"最低温"+low+"℃"+"最高温"+high+"℃风力"+wind+"级");
                    }
-                   else if (i==3){
-                       future3.setText(date+day+"最低温"+low+"度"+"最高温"+high+"度，风力"+wind+"级");
-                   }
+                   /*else if (i==3){
+                       future3.setText("明日"+day+"最低温"+low+"度"+"最高温"+high+"度，风力"+wind+"级");
+                   }*/
 
                 }
 
@@ -287,15 +507,15 @@ public class WeatherActivity extends AppCompatActivity {
         cityname.setText(city_name+":");
        // time.setText();
         weatherConditions1.setText(weatherConditions);
-        temerature1.setText(temperature);
-        feel_like1.setText(feel_like);
+        temerature1.setText(temperature+"℃");
+        feel_like1.setText(feel_like+"℃");
         wind_direction1.setText(wind_direction);
         wind_speed1.setText(wind_speed);
-        wind_scale1.setText(wind_scale);
+        wind_scale1.setText(wind_scale+"级");
         quarity1.setText(quality);
         humidity1.setText(humidity);
-        visibility1.setText(visibility);
-        pressure1.setText(pressure);
+        visibility1.setText(visibility+"km");
+        pressure1.setText(pressure+"hPa");
         pm2_51.setText(pm2_5);
         pm10_1.setText(PM10);
         so2_1.setText(so2);
@@ -330,7 +550,7 @@ public class WeatherActivity extends AppCompatActivity {
                         Toast.makeText(WeatherActivity.this, "您输入的城市不存在，请重新输入！", Toast.LENGTH_SHORT).show();
                         break;
                     case 2:
-                        Toast.makeText(WeatherActivity.this, "查询失败！请检查您的网络连接", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WeatherActivity.this, "查询失败！", Toast.LENGTH_SHORT).show();
                         break;
                 }
                 return true;
