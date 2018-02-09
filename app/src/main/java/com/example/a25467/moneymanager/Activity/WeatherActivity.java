@@ -14,9 +14,12 @@ import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +27,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.a25467.moneymanager.Adapter.BookKeppingAdapter;
+import com.example.a25467.moneymanager.Datatable.InformationDataTable;
 import com.example.a25467.moneymanager.R;
 import com.example.a25467.moneymanager.manager.DbManager;
 import com.example.a25467.moneymanager.utils.HttpUtils;
@@ -31,6 +36,7 @@ import com.example.a25467.moneymanager.utils.HttpUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,6 +48,7 @@ import okhttp3.OkHttpClient;
 public class WeatherActivity extends AppCompatActivity {
     private Handler handler;
     private EditText editText;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private TextView cityname,time,weatherConditions1,temerature1,feel_like1,wind_direction1,wind_speed1,
     wind_scale1,humidity1,visibility1,quarity1,pressure1,pm2_51,pm10_1,so2_1,no2_1,co_1,o3_1,dressing1,uv_information1,
     car_washing_information1,travel_information1,flu_information1,sport_information1;
@@ -52,7 +59,7 @@ public class WeatherActivity extends AppCompatActivity {
     public Double latitude;
     public Double longitude;
     public String cityName;
-    public boolean isFirstOpen=true;
+    public boolean isFirstOpen=true,refrashGetLocate=false;
     public String city_name;
     public String weatherConditions;
     public String temperature;
@@ -85,6 +92,14 @@ public class WeatherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh1);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh();//调用刷新方法
+            }
+        });
         editText = (EditText) findViewById(R.id.edit_text);
        // nowLocate=(TextView)findViewById(R.id.nowLocate);
 
@@ -130,74 +145,78 @@ public class WeatherActivity extends AppCompatActivity {
             String[]permissions=permissionList.toArray(new String[permissionList.size()]);
             ActivityCompat.requestPermissions(WeatherActivity.this,permissions,1);
         }
-        else {
 
-        }
+
         location();
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)&&!locationManager.isProviderEnabled(LocationManager
+                    .NETWORK_PROVIDER)){
+                // Toast.makeText(WeatherActivity.this,"请打开GPS",Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+                dialog.setTitle("请打开GPS连接");
+                dialog.setMessage("为了能给您发送天气信息，需要先判断您的位置，请先打开GPS。");
+                dialog.setPositiveButton("设置",new android.content.DialogInterface.OnClickListener(){
+                    @Override
+                    public void  onClick(DialogInterface arg0,int arg1){
+                        //转到手机设置界面，用户设置GPS
+                        Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                        Toast.makeText(WeatherActivity.this,"打开后直接点击返回键下拉刷新即可切换到所在城市"
 
+                                ,Toast.LENGTH_SHORT).show();
 
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            Toast.makeText(WeatherActivity.this,"请打开GPS",Toast.LENGTH_SHORT).show();
-            AlertDialog.Builder dialog=new AlertDialog.Builder(this);
-            dialog.setTitle("请打开GPS连接");
-            dialog.setMessage("为了能给您发送天气信息，需要先判断您的位置，请先打开GPS。");
-            dialog.setPositiveButton("设置",new android.content.DialogInterface.OnClickListener(){
-                @Override
-                public void  onClick(DialogInterface arg0,int arg1){
-                    //转到手机设置界面，用户设置GPS
-                    Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    Toast.makeText(WeatherActivity.this,"打开后直接点击返回键即可，若不打开返回下次将再次出现对话框"
-                            ,Toast.LENGTH_SHORT).show();
+                        //设置完成后返回原来界面
+                        startActivityForResult(intent,0);
 
-                    //设置完成后返回原来界面
-                    startActivityForResult(intent,0);
-                }
+                    }
 
-            });
-            dialog.setNeutralButton("取消",new android.content.DialogInterface.OnClickListener(){
-                @Override
-                public void  onClick(DialogInterface arg0,int arg1){
-                    arg0.dismiss();
-                }
-            });
-            dialog.show();
+                });
+                dialog.setNeutralButton("取消",new android.content.DialogInterface.OnClickListener(){
+                    @Override
+                    public void  onClick(DialogInterface arg0,int arg1){
+                        arg0.dismiss();
+                    }
+                });
+                dialog.show();
 
         }
-        //获得城市名
-      try{
-          cityName=getAddress(latitude,longitude);
-    // 将城市名后面的市去掉
-       cityName=cityName.substring(0,cityName.length()-1);
-      Log.d("hhh",cityName);
 
-     }
-     catch (Exception e){
-      e.printStackTrace();
-      Toast.makeText(WeatherActivity.this,"获取失败,请走到开放地带！",Toast.LENGTH_SHORT).show();
-     }
+      //  else {
+           // location();
+            Log.d("hhh","你的位置"+String.valueOf(longitude));
+            //获得城市名
+            try{
+                cityName=getAddress(latitude,longitude);
+                // 将城市名后面的市去掉
+                cityName=cityName.substring(0,cityName.length()-1);
+                Log.d("hhh",cityName);
 
-            //Log.d("hhh",String.valueOf(latitude));
-
-       // Log.d("hhh",cityName);
-
-       // nowLocate.setText("现在位于："+cityName);
-
-        if (isFirstOpen){
-            editText.setText(cityName);
-           // cityname.setText("jsjjjk");
-            deal();
-            isFirstOpen=false;
-        }
-
-        findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                deal();
             }
-        });
+            catch (Exception e){
+                e.printStackTrace();
+                if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+                    Toast.makeText(WeatherActivity.this,"获取失败,请走到开放地带！",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            if (isFirstOpen){
+                editText.setText(cityName);
+                // cityname.setText("jsjjjk");
+                deal();
+                isFirstOpen=false;
+            }
+
+            findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    deal();
+                }
+            });
         initHandler();
-    }
+
+        }
+
+    //}
     public void  location(){
+
         //List<String >permission
         //查看权限
 
@@ -215,7 +234,36 @@ public class WeatherActivity extends AppCompatActivity {
             provider=LocationManager.NETWORK_PROVIDER;
         }
         else {
-            Toast.makeText(this,"请检查网络或者GPS是否打开",Toast.LENGTH_SHORT).show();
+            /*AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+            dialog.setTitle("请打开GPS连接");
+            dialog.setMessage("为了能给您发送天气信息，需要先判断您的位置，请先打开GPS。");
+            dialog.setPositiveButton("设置",new android.content.DialogInterface.OnClickListener(){
+                @Override
+                public void  onClick(DialogInterface arg0,int arg1){
+                    //转到手机设置界面，用户设置GPS
+                    Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    Toast.makeText(WeatherActivity.this,"打开后直接点击返回键即可，若不打开返回下次将再次出现对话框"
+                            ,Toast.LENGTH_SHORT).show();
+                    //设置完成后返回原来界面
+                    startActivityForResult(intent,0);
+                    Log.d("hhh","hhhhhhhhh");
+                }
+
+            });
+            dialog.setNeutralButton("取消",new android.content.DialogInterface.OnClickListener(){
+                @Override
+                public void  onClick(DialogInterface arg0,int arg1){
+                    arg0.dismiss();
+
+                }
+            });
+            dialog.show();*/
+
+            if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)&&locationManager.isProviderEnabled(LocationManager
+                    .NETWORK_PROVIDER)){
+            Toast.makeText(this,"定位失败！",Toast.LENGTH_SHORT).show();
+
+            }
             return;
         }
         Log.d("hhh","zzzzz");
@@ -241,7 +289,9 @@ public class WeatherActivity extends AppCompatActivity {
             //获取当前位置
              latitude=location.getLatitude();
             longitude=location.getLongitude();
-            Log.d("hhh",String.valueOf(latitude));
+            Log.d("hhh",String.valueOf(latitude)+"11111");
+            Log.d("hhh",String.valueOf(longitude)+"11111");
+            refrashGetLocate=true;
         }
         else{
             locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,1000,0,locationListener);
@@ -249,6 +299,12 @@ public class WeatherActivity extends AppCompatActivity {
             if (location !=null){
                 latitude=location1.getLatitude();
                 longitude=location1.getLongitude();
+                Log.d("hhh",String.valueOf(latitude)+"22222");
+                Log.d("hhh",String.valueOf(longitude)+"22222");
+                refrashGetLocate=true;
+            }
+            else {
+               refrashGetLocate=false;
             }
         }
         /**绑定定位事件，监听位置是否改变
@@ -358,7 +414,6 @@ public class WeatherActivity extends AppCompatActivity {
                                 handler.sendEmptyMessage(2);
                             }else{
                                 handler.sendEmptyMessage(0);
-
                             }
                         }
                     }
@@ -376,16 +431,16 @@ public class WeatherActivity extends AppCompatActivity {
             String status = jsonObject.optString("status");
 
             if (!status.equals("OK")){
-                //status 不等于 ok 说明 请求失败，返回null
                 return null;
             }
 
             //城市名
             JSONArray jsonArray = jsonObject.optJSONArray("weather");
+
             Log.d("hhh",String.valueOf(jsonArray)+"111");
             jsonObject = jsonArray.optJSONObject(0);
             city_name= jsonObject.optString("city_name");
-
+            Log.d("hhh",city_name);
             JSONObject now = jsonObject.optJSONObject("now");
             //天气状况
              weatherConditions=now.optString("text");
@@ -556,5 +611,33 @@ public class WeatherActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+    private void refresh(){
+        location();
+        try{
+            cityName=getAddress(latitude,longitude);
+            // 将城市名后面的市去掉
+            cityName=cityName.substring(0,cityName.length()-1);
+            Log.d("hhh",cityName);
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        initHandler();
+
+        if (refrashGetLocate==true){
+            editText.setText(cityName);
+            deal();
+            show();
+            Toast.makeText(WeatherActivity.this,"刷新成功,已定位到您所在城市",Toast.LENGTH_SHORT).show();
+            refrashGetLocate=false;
+        }
+        else if (refrashGetLocate==false){
+            Toast.makeText(WeatherActivity.this,"刷新失败，请走到开阔地带或将定位服务调成只使用网络定位状态。",Toast.LENGTH_SHORT).show();
+        }
+
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 }

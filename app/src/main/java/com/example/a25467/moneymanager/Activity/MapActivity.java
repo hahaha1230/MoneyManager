@@ -3,16 +3,21 @@ package com.example.a25467.moneymanager.Activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -95,18 +100,43 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_map);
-
+       setTitle("高德地图");
         locate_sure=(Button)findViewById(R.id.locate_sure);
-        locate_quit=(Button)findViewById(R.id.locate_quit);
-        tvresult=(TextView)findViewById(R.id.tvresult);
+       locate_quit=(Button)findViewById(R.id.locate_quit);
+       tvresult=(TextView)findViewById(R.id.tvresult);
         progressDialog=new ProgressDialog(MapActivity.this);
         progressDialog.setTitle("信息提示：");
         progressDialog.setMessage("正在加载中......");
         progressDialog.setCancelable(true);
-        progressDialog.show();
-       setTitle("高德地图");
+       // progressDialog.show();
+      LocationManager   locationManager=(LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)&&!locationManager.isProviderEnabled(LocationManager
+                .NETWORK_PROVIDER)){
+            // Toast.makeText(WeatherActivity.this,"请打开GPS",Toast.LENGTH_SHORT).show();
+            AlertDialog.Builder dialog=new AlertDialog.Builder(this);
+            dialog.setTitle("请打开GPS连接");
+            dialog.setMessage("为了能您的位置，请先打开GPS。");
+            dialog.setPositiveButton("设置",new android.content.DialogInterface.OnClickListener(){
+                @Override
+                public void  onClick(DialogInterface arg0,int arg1){
+                    //转到手机设置界面，用户设置GPS
+                    Intent intent=new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    Toast.makeText(MapActivity.this,"打开后点击右上角图标即可切换到所在位置",Toast.LENGTH_SHORT).show();
 
+                    //设置完成后返回原来界面
+                    startActivityForResult(intent,0);
 
+                }
+
+            });
+            dialog.setNeutralButton("取消",new android.content.DialogInterface.OnClickListener(){
+                @Override
+                public void  onClick(DialogInterface arg0,int arg1){
+                    arg0.dismiss();
+                }
+            });
+            dialog.show();
+            }
        locate_sure.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
@@ -116,6 +146,15 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
                    setResult(RESULT_OK,intent);
                    finish();
                }
+               else {
+                   Toast.makeText(MapActivity.this,"请选择地点。",Toast.LENGTH_SHORT).show();
+               }
+           }
+       });
+       locate_quit.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               finish();
            }
        });
 
@@ -142,6 +181,9 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
            String[]permissions=permissionList.toArray(new String[permissionList.size()]);
            ActivityCompat.requestPermissions(MapActivity.this,permissions,1);
        }
+       else {
+          // mlocationClient.startLocation();
+       }
 
 
 
@@ -149,6 +191,9 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.map);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
+        mMapView.onCreate(savedInstanceState);
+        //定义了一个地图view
+        mMapView = (MapView) findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);// 此方法须覆写，虚拟机需要在很多情况下保存地图绘制的当前状态。
         markerOptions =new MarkerOptions().draggable(true);
         //初始化地图控制器对象
@@ -168,12 +213,11 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
 
             //设置定位的类型为定位模式
             aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-
+            setUpMap();
             //设置显示指北针
             mUiSettings.setCompassEnabled(true);
             //设置显示比例尺
             mUiSettings.setScaleControlsEnabled(true);
-            setUpMap();
         }
 
 
@@ -197,7 +241,6 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
                 handler.sendMessage(message);//将message对象发送出去
             }
         }).start();
-        progressDialog.dismiss();
 
 
 
@@ -220,9 +263,8 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
                             return;
                         }
                     }
-                    //调用显示
                     mlocationClient.startLocation();
-
+                    //调用显示
                 }
                 else {
                     Toast.makeText(this,"发生未知错误",Toast.LENGTH_SHORT).show();
@@ -382,7 +424,7 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
             //设置定位回调监听
             mlocationClient.setLocationListener(this);
             //设置为高精度定位模式
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
             //设置定位参数
             mlocationClient.setLocationOption(mLocationOption);
             //此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗
@@ -432,7 +474,6 @@ public class MapActivity extends Activity implements GeoFenceListener,AMap.OnMap
                 aMapLocation.getAoiName();//获取当前定位点AOI信息
                 aMapLocation.getFloor();//获取当前定位楼层
                 aMapLocation.getGpsAccuracyStatus();//获取当前GPS状态
-                Log.d("hhh",String.valueOf(aMapLocation.getErrorCode()));
                 Log.d("hhh",aMapLocation.getCity());
                 my_location=aMapLocation.getAddress();
                 if (isFirst){
