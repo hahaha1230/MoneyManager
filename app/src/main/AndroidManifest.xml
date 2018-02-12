@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.a25467.moneymanager">
 
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -27,6 +26,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
 
     <application
         android:name=".Class.GetContext"
@@ -62,26 +62,22 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".Activity.NewNoteActivity" />
         <activity android:name=".Activity.SettingActivity" />
 
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".Activity.MapActivity" />
-        <activity android:name=".Activity.WeatherActivity">
-
-        </activity>
+        <activity android:name=".Activity.MapActivityMy" />
+        <activity android:name=".Activity.WeatherActivity"></activity>
 
         <service
             android:name=".Service.MyService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Activity.MainActivity">
-
-        </activity>
+        <activity android:name=".Activity.MainActivity"></activity>
+        <activity android:name=".Activity.MapActivity"></activity>
     </application>
 
 </manifest>

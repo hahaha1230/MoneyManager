@@ -6,12 +6,16 @@
     android:padding="10dp"
     android:background="?attr/colorPrimary"
     >
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="70dp"
         android:layout_height="70dp"
+        civ_border_color="#FF0000"
+        civ_border_width="1dp"
         android:src="@mipmap/hhh"
-        android:id="@+id/icon_image"
-        android:layout_centerInParent="true"/>
+        android:scaleType="centerCrop"
+        android:layout_centerInParent="true"
+        android:id="@+id/ci"/>
+
 
     <TextView
         android:layout_width="wrap_content"
