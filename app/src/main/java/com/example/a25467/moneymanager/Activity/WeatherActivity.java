@@ -112,8 +112,13 @@ public class WeatherActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weather);
+
         initview();
 
+
+        /**
+         *  检查是否有权限
+         */
 
         List<String> permissionList = new ArrayList<>();
         if (ContextCompat.checkSelfPermission(WeatherActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -131,6 +136,10 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         location();
+        /**
+         *  若用户没有打开GPS，提示用户打开
+         */
+
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && !locationManager.isProviderEnabled(LocationManager
                 .NETWORK_PROVIDER)) {
             // Toast.makeText(WeatherActivity.this,"请打开GPS",Toast.LENGTH_SHORT).show();
@@ -158,8 +167,9 @@ public class WeatherActivity extends AppCompatActivity {
             dialog.show();
 
         }
-        Log.d("hhh", "你的位置" + String.valueOf(longitude));
-        //获得城市名
+        /**
+         * 获得城市名
+         */
         try {
             cityName = getAddress(latitude, longitude);
             // 将城市名后面的市去掉
@@ -178,8 +188,11 @@ public class WeatherActivity extends AppCompatActivity {
             isFirstOpen = false;
         }
         initHandler();
-
     }
+
+    /**
+     * 初始化控件
+     */
 
     public void initview() {
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh1);
@@ -228,7 +241,9 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
 
-    //}
+    /**
+     * 获取经纬度
+     */
     public void location() {
         //获取定位服务
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -282,13 +297,16 @@ public class WeatherActivity extends AppCompatActivity {
                 refrashGetLocate = false;
             }
         }
-        /**绑定定位事件，监听位置是否改变
-         * 第一册参数为控制器类型，第二个参数为时间间隔（单位为：ms），
-         * 第三个为位置变化间隔（单位为：m），第四个参数为位置监听器
-         */
         locationManager.requestLocationUpdates(provider, 1000, 2, locationListener);
 
     }
+
+    /**
+     * 回调授权结果
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -311,7 +329,9 @@ public class WeatherActivity extends AppCompatActivity {
         }
     }
 
-    //将经纬度信息转换成城市信息
+    /**
+     *   将经纬度信息转换成城市信息
+     */
     public String getAddress(double latitude, double longitude) {
         Log.d("hhh", "111");
         Geocoder geocoder = new Geocoder(WeatherActivity.this, Locale.getDefault());
@@ -364,6 +384,10 @@ public class WeatherActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * 发送城市天气请求，获得结果
+     */
+
     private void deal() {
         final String cityStr = editText.getText().toString();
         if (cityStr.isEmpty() && (!isFirstOpen)) {
@@ -397,23 +421,23 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 解析json数据，并把解析出来的数据赋值给变量
+     * @param json
+     * @return
+     */
     public String CityWeatherModel(String json) {
         parseJSONWithGSON(json);
         try {
             JSONObject jsonObject = new JSONObject(json);
             String status = jsonObject.optString("status");
-
             if (!status.equals("OK")) {
                 return null;
             }
-
             //城市名
             JSONArray jsonArray = jsonObject.optJSONArray("weather");
-
-            Log.d("hhh", String.valueOf(jsonArray) + "111");
             jsonObject = jsonArray.optJSONObject(0);
             city_name = jsonObject.optString("city_name");
-            Log.d("hhh", city_name);
             JSONObject now = jsonObject.optJSONObject("now");
             //天气状况
             weatherConditions = now.optString("text");
@@ -475,8 +499,6 @@ public class WeatherActivity extends AppCompatActivity {
             //运动信息
             JSONObject sport = suggestion.optJSONObject("sport");
             sport_information = sport.optString("brief") + "  " + sport.optString("details");
-            // Log.d("hhh","hhh1");
-
             //未来天气状况表
             try {
                 JSONArray jsonArray1 = jsonObject.optJSONArray("future");
@@ -498,13 +520,16 @@ public class WeatherActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return PM10;
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * 利用Gson解析json数据
+     * @param jsonData
+     */
     private void parseJSONWithGSON(String jsonData) {
         Gson gson=new Gson();
        // GsonWeather  gsonWeather=gson.fromJson(jsonData,GsonWeather.class);
@@ -539,6 +564,10 @@ public class WeatherActivity extends AppCompatActivity {
         // Log.d("hhh",String.valueOf(beanList)+"hhhhh");
 
     }
+
+    /**
+     * 将解析出来的数据展示出来
+     */
 
     public void show() {
         cityname.setText(city_name + ":");
@@ -594,6 +623,9 @@ public class WeatherActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 下拉刷新，获取所在的城市天气信息
+     */
     private void refresh() {
         location();
         try {
@@ -616,8 +648,6 @@ public class WeatherActivity extends AppCompatActivity {
         } else if (refrashGetLocate == false) {
             Toast.makeText(WeatherActivity.this, "刷新失败，请走到开阔地带或将定位服务调成只使用网络定位状态。", Toast.LENGTH_SHORT).show();
         }
-
-
         swipeRefreshLayout.setRefreshing(false);
     }
 }

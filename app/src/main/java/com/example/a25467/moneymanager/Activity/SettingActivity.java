@@ -18,86 +18,91 @@ import org.litepal.crud.DataSupport;
 
 import java.util.List;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
-    Button sure_Modify,quit_Modify;
-    EditText budget_Pay,budget_Income,name;
-    RadioGroup sex;
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+    private Button sure_Modify;
+    private Button quit_Modify;
+    private EditText budget_Pay;
+    private EditText budget_Income;
+    private EditText name;
+    private RadioGroup sex;
     String m;//存储性别
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-        sure_Modify=(Button)findViewById(R.id.sure_Modify);
-        quit_Modify=(Button)findViewById(R.id.quit_Modify);
-        budget_Income=(EditText)findViewById(R.id.budget_Income);
-        budget_Pay=(EditText)findViewById(R.id.budget_Pay);
-        name=(EditText)findViewById(R.id.name);
-        sex=(RadioGroup)findViewById(R.id.sex);
+
+        initview();
+    }
+
+    /**
+     * 初始化界面
+     */
+    public void initview() {
+        sure_Modify = (Button) findViewById(R.id.sure_Modify);
+        quit_Modify = (Button) findViewById(R.id.quit_Modify);
+        budget_Income = (EditText) findViewById(R.id.budget_Income);
+        budget_Pay = (EditText) findViewById(R.id.budget_Pay);
+        name = (EditText) findViewById(R.id.name);
+        sex = (RadioGroup) findViewById(R.id.sex);
         sure_Modify.setOnClickListener(this);
         quit_Modify.setOnClickListener(this);
-
-
 
         sex.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
+                switch (checkedId) {
                     case R.id.men:
-                        m="男";
+                        m = "男";
                         break;
                     case R.id.women:
-                        m="女";
+                        m = "女";
                         break;
-                        default:
-                            break;
-
-
+                    default:
+                        break;
                 }
             }
         });
         //在edittext中用sethint方法给用者提示原本的信息
-        List<InformationDataTable>informationDataTables= DataSupport.findAll(InformationDataTable.class);
-        for (InformationDataTable informationDataTable:informationDataTables){
+        List<InformationDataTable> informationDataTables = DataSupport.findAll(InformationDataTable.class);
+        for (InformationDataTable informationDataTable : informationDataTables) {
             name.setHint(informationDataTable.getName());
             budget_Pay.setHint(informationDataTable.getBudget_Pay().toString());
             budget_Income.setHint(informationDataTable.getBudget_Income().toString());
         }
     }
+
+    /**
+     * 设置界面点击事件
+     * @param v
+     */
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
 
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.sure_Modify:
-                String information="";
-                try{
-
+                String information = "";
+                try {
                     //更新数据
-                    InformationDataTable informationDataTable=new InformationDataTable();
+                    InformationDataTable informationDataTable = new InformationDataTable();
                     informationDataTable.setName(name.getText().toString());
                     informationDataTable.setSex(m);
                     informationDataTable.setBudget_Income(Double.valueOf(budget_Income.getText().toString()));
                     informationDataTable.setBudget_Pay(Double.valueOf(budget_Pay.getText().toString()));
                     informationDataTable.updateAll();
-                    information="信息修改成功！";
+                    information = "信息修改成功！";
                     finish();
-
-
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                    information="您输入的信息有误，请重新输入！";
+                    information = "您输入的信息有误，请重新输入！";
                 } finally {
-                    Toast.makeText(SettingActivity.this,information,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingActivity.this, information, Toast.LENGTH_SHORT).show();
                 }
-
                 break;
             case R.id.quit_income:
                 break;
-                default:
-                    break;
-
-
+            default:
+                break;
         }
 
     }

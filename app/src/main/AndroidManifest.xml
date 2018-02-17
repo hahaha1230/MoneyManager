@@ -76,7 +76,6 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".Activity.MainActivity"></activity>
         <activity android:name=".Activity.MapActivity"></activity>
     </application>
 

@@ -150,7 +150,9 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
             }
         });
     }
-    //点击back时能返回数据
+    /**
+     *  点击back时能返回数据
+     */
     @Override
     public void onBackPressed(){
         Intent intent=new Intent();

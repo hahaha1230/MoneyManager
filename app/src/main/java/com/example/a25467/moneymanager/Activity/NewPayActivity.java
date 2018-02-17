@@ -19,50 +19,68 @@ import com.example.a25467.moneymanager.R;
 
 import java.util.Calendar;
 
-public class NewPayActivity extends Activity implements View.OnClickListener{
-    Button choose_Account, choose_date, sure_pay, quit_pay,chooseLocate;
-    TextView sure_Account,locateDisplay;
-    TextView dateDisplay;
-    EditText num, purpose, notes1;
-    int mYear,mMonth,mDay;
-    final int DATE_DIALOG=1;
+public class NewPayActivity extends Activity implements View.OnClickListener {
+    private Button choose_Account;
+    private Button choose_date;
+    private Button sure_pay;
+    private Button quit_pay;
+    private Button chooseLocate;
+    private TextView sure_Account;
+    private TextView locateDisplay;
+    private TextView dateDisplay;
+    private EditText num;
+    private EditText purpose;
+    private EditText notes1;
+    int mYear, mMonth, mDay;
+    final int DATE_DIALOG = 1;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_pay);
-        choose_date = (Button)findViewById(R.id.choose_date);
+
+        initView();
+    }
+
+    /**
+     * 初始化界面
+     */
+    public void  initView(){
+        choose_date = (Button) findViewById(R.id.choose_date);
         dateDisplay = (TextView) findViewById(R.id.dateDisplay);
-        choose_Account = (Button)findViewById(R.id.choose_Account);
-        sure_Account = (TextView)findViewById(R.id.sure_Account);
+        choose_Account = (Button) findViewById(R.id.choose_Account);
+        sure_Account = (TextView) findViewById(R.id.sure_Account);
         choose_date = (Button) findViewById(R.id.choosedate1);
-        chooseLocate=(Button)findViewById(R.id.choose_location);
+        chooseLocate = (Button) findViewById(R.id.choose_location);
         num = (EditText) findViewById(R.id.num);
-        purpose = (EditText)findViewById(R.id.purpose);
+        purpose = (EditText) findViewById(R.id.purpose);
         notes1 = (EditText) findViewById(R.id.notes1);
         sure_pay = (Button) findViewById(R.id.sure_pay);
         quit_pay = (Button) findViewById(R.id.quit_pay);
         dateDisplay = (TextView) findViewById(R.id.dateDisplay1);
-        locateDisplay=(TextView)findViewById(R.id.locationDisplay);
+        locateDisplay = (TextView) findViewById(R.id.locationDisplay);
         choose_Account.setOnClickListener(this);
         choose_date.setOnClickListener(this);
         sure_pay.setOnClickListener(this);
         quit_pay.setOnClickListener(this);
         chooseLocate.setOnClickListener(this);
 
-        final  Calendar ca= Calendar.getInstance();
-        mYear=ca.get(Calendar.YEAR);
-        mMonth=ca.get(Calendar.MONTH);
-        mDay=ca.get(Calendar.DAY_OF_MONTH);
-
-
-
+        final Calendar ca = Calendar.getInstance();
+        mYear = ca.get(Calendar.YEAR);
+        mMonth = ca.get(Calendar.MONTH);
+        mDay = ca.get(Calendar.DAY_OF_MONTH);
     }
+
+    /**
+     * 设置界面点击事件，包括选择时间、地点、保存等事件
+     *
+     * @param v
+     */
 
     @Override
     public void onClick(View v) {
-        String information =null;
+        String information = null;
         switch (v.getId()) {
             case R.id.choosedate1:
                 showDialog(DATE_DIALOG);
@@ -72,22 +90,22 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
                 choose_Account.showContextMenu();
                 break;
             case R.id.choose_location:
-                Intent intent=new Intent(NewPayActivity.this,MapActivity.class);
-                startActivityForResult(intent,2);
+                Intent intent = new Intent(NewPayActivity.this, MapActivity.class);
+                startActivityForResult(intent, 2);
                 break;
             case R.id.sure_pay:
                 try {
-                    String str=dateDisplay.getText().toString();
+                    String str = dateDisplay.getText().toString();
                     str.trim();
-                    String str2="";
-                    if (str !=null&&!"".equals(str)){
-                        for (int i=0;i<str.length();i++){
-                            if (str.charAt(i)>=48 &&str.charAt(i)<=57){
-                                str2+=str.charAt(i);
+                    String str2 = "";
+                    if (str != null && !"".equals(str)) {
+                        for (int i = 0; i < str.length(); i++) {
+                            if (str.charAt(i) >= 48 && str.charAt(i) <= 57) {
+                                str2 += str.charAt(i);
                             }
                         }
                     }
-                    BookKepping_Data_Table bookKepping_data_table= new BookKepping_Data_Table();
+                    BookKepping_Data_Table bookKepping_data_table = new BookKepping_Data_Table();
                     bookKepping_data_table = new BookKepping_Data_Table();
                     bookKepping_data_table.setCategory(1);
                     bookKepping_data_table.setMoney(Double.parseDouble(num.getText().toString()));
@@ -98,13 +116,13 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
                     bookKepping_data_table.setNotes(notes1.getText().toString());
                     bookKepping_data_table.setCreate_time(System.currentTimeMillis());
                     bookKepping_data_table.save();
-                    information="您的新的支出信息已保存";
+                    information = "您的新的支出信息已保存";
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
-                    information="您输入的信息有误，请重新输入！";
+                    information = "您输入的信息有误，请重新输入！";
                 } finally {
-                    Toast.makeText(NewPayActivity.this,information,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewPayActivity.this, information, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -123,21 +141,22 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 menu.add(0, 0, 0, "现金");
                 menu.add(1, 1, 1, "储蓄卡");
-                menu.add(2,2,2,"信用卡");
-                menu.add(3,3,3,"支付宝");
-                menu.add(4,4,4,"微信钱包");
-                menu.add(5,5,5,"蚂蚁花呗");
-                menu.add(6,6,6,"QQ红包");
+                menu.add(2, 2, 2, "信用卡");
+                menu.add(3, 3, 3, "支付宝");
+                menu.add(4, 4, 4, "微信钱包");
+                menu.add(5, 5, 5, "蚂蚁花呗");
+                menu.add(6, 6, 6, "QQ红包");
             }
 
         });
     }
-    @Override
-    protected void  onActivityResult(int requestCode,int resultCode,Intent data){
 
-        switch (requestCode){
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        switch (requestCode) {
             case 2:
-                if (resultCode==RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     locateDisplay.setText(data.getExtras().getString("result"));
                 }
                 break;
@@ -145,9 +164,16 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
                 break;
         }
     }
+
+    /**
+     * 设置对话框内容
+     * @param item
+     * @return
+     */
+
     @Override
-    public boolean onContextItemSelected(MenuItem item){
-        switch (item.getGroupId()){
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getGroupId()) {
             case 0:
                 sure_Account.setText("现金");
                 break;
@@ -172,48 +198,46 @@ public class NewPayActivity extends Activity implements View.OnClickListener{
             default:
                 break;
         }
-        return  true;
+        return true;
     }
+
     @Override
-    protected Dialog onCreateDialog(int id){
-        switch (id){
+    protected Dialog onCreateDialog(int id) {
+        switch (id) {
             case DATE_DIALOG:
-                return new DatePickerDialog(this,mdateListener,mYear,mMonth,mDay);
+                return new DatePickerDialog(this, mdateListener, mYear, mMonth, mDay);
         }
         return null;
     }
+
     //日期若为单数则在前面补一个0并显示日期
-    public void display(){
+    public void display() {
         /*dateDisplay.setText(new StringBuffer().append(mMonth+1).append("-").append(mDay).append("-")
                 .append(mYear).append(" "));*/
-        if (mMonth<10&&mDay<10){
+        if (mMonth < 10 && mDay < 10) {
 
-            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth+1).
-                        append("月").append("0").append(mDay).append("日"));
-        }
-            else  if (mMonth>=10&&mDay<10){
-                dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth+1).
-                        append("月").append("0").append(mDay).append("日"));
-            }
-
-        else if (mMonth<10&&mDay>=10) {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).
+                    append("月").append("0").append(mDay).append("日"));
+        } else if (mMonth >= 10 && mDay < 10) {
+            dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth + 1).
+                    append("月").append("0").append(mDay).append("日"));
+        } else if (mMonth < 10 && mDay >= 10) {
             dateDisplay.setText(new StringBuffer().append(mYear).append("年").append("0").append(mMonth + 1).
                     append("月").append(mDay).append("日"));
-        }
-        else {
+        } else {
             dateDisplay.setText(new StringBuffer().append(mYear).append("年").append(mMonth + 1).
                     append("月").append(mDay).append("日"));
         }
 
 
-
     }
-    private DatePickerDialog.OnDateSetListener mdateListener=new DatePickerDialog.OnDateSetListener() {
+
+    private DatePickerDialog.OnDateSetListener mdateListener = new DatePickerDialog.OnDateSetListener() {
         @Override
         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-            mYear=year;
-            mMonth=month;
-            mDay=dayOfMonth;
+            mYear = year;
+            mMonth = month;
+            mDay = dayOfMonth;
             display();
         }
     };
