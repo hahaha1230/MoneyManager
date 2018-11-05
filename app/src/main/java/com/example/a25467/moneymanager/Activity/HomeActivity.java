@@ -81,7 +81,6 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
     public MenuItem gMenuItem = null;
     private InformationDataTable informationDataTable = new InformationDataTable();
 
-
     String[] titles = new String[]{"便签", "记账"};
 
 
@@ -173,6 +172,7 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
             }
         });
 
+
         /**
          * 设置点击照片的弹出contextmenu的内容
          */
@@ -181,9 +181,9 @@ public class MainInterfaceActivity extends AppCompatActivity implements View.OnC
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
                 menu.add(0, 0, 0, "拍照");
                 menu.add(1, 1, 1, "从相册中选");
-
             }
         });
+
 
         /**
          * 如果指定目录下面有照片，将照片替换为头像照片

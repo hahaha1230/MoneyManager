@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/drawer_layout"
-    tools:context="com.example.a25467.moneymanager.Activity.MainInterfaceActivity">
+    tools:context="com.example.a25467.moneymanager.Activity.HomeActivity">
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -96,9 +96,6 @@
        >
 
     </android.support.design.widget.NavigationView>
-
-
-
 
 
 </android.support.v4.widget.DrawerLayout>
